@@ -136,9 +136,9 @@ private:
     NeededSentences NeededSentencesArray;
     Variables VariablesArray;
     ReceivedSentences ReceivedSentencesrray;
-    wxString VarAlowed = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-    wxString VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    wxString VarDigit = wxT("0123456789");
+    wxString VarAlowed;
+    wxString VarAlpha;
+    wxString VarDigit;
     NmeaConverter_pi* plugin;
     wxTimer* m_timer;
     bool DlgActive;
