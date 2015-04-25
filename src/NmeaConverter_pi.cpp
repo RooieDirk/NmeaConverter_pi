@@ -239,6 +239,9 @@ bool NmeaConverter_pi::LoadConfig( void )
 //************************************************************************************
 nmeaSendObj::nmeaSendObj()
 {
+    VarAlowed = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+    VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    VarDigit = wxT("0123456789");
 }
 nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
 {
