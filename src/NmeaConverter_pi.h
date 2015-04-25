@@ -34,13 +34,12 @@
   #include "wx/wx.h"
 #endif //precompiled headers
 
-#define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    1
+#include "version.h"
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    8
 
-#include "../../../include/ocpn_plugin.h"
+#include "ocpn_plugin.h"
 
 #include "ec_defs.h"
 #include "ec_engine.h"
@@ -137,9 +136,9 @@ private:
     NeededSentences NeededSentencesArray;
     Variables VariablesArray;
     ReceivedSentences ReceivedSentencesrray;
-    wxString VarAlowed = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-    wxString VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    wxString VarDigit = wxT("0123456789");
+    wxString VarAlowed;
+    wxString VarAlpha;
+    wxString VarDigit;
     NmeaConverter_pi* plugin;
     wxTimer* m_timer;
     bool DlgActive;
