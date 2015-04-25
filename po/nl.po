@@ -35,11 +35,11 @@ msgstr ""
 
 #: src/NmeaConverter_pi.cpp:499
 msgid "Block incomming messages with wrong checksum"
-msgstr ""
+msgstr "Blokeer inkomende berichten met fout controle getal"
 
 #: src/NmeaConverter_pi.cpp:523
 msgid "New"
-msgstr ""
+msgstr "Nieuw"
 
 #: src/NmeaConverter_pi.cpp:526
 msgid "Edit"
@@ -55,11 +55,11 @@ msgstr ""
 
 #: src/NmeaConverter_pi.cpp:696
 msgid "Send after update all variables"
-msgstr ""
+msgstr "Verstuur na verversing alle gegevens"
 
 #: src/NmeaConverter_pi.cpp:699
 msgid "Send every                    seconds"
-msgstr ""
+msgstr "Verstuur iedere               seconde"
 
 #: src/NmeaConverter_pi.cpp:705
 msgid "Output sentence comes here;-)"

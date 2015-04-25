@@ -1,5 +1,6 @@
+
 /******************************************************************************
- * updated: 12-04-2015  
+ * updated: 25-04-2015  
  * Project:  OpenCPN
  * Purpose:  nmeaTranslate Plugin
  * Author:   Dirk Smits
@@ -676,10 +677,10 @@ nmeaSendObjectDlg::nmeaSendObjectDlg( wxWindow* parent, wxWindowID id, const wxS
 bool nmeaSendObjectDlg::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
-    wxDialog::Create( parent, id, caption, pos, wxSize(312,215), style );
+    wxDialog::Create( parent, id, caption, pos, size, style );
 
     CreateControls();
-
+    Centre();
     return true;
 }
 
@@ -695,24 +696,51 @@ void nmeaSendObjectDlg::Init()
 void nmeaSendObjectDlg::CreateControls()
 {    
     nmeaSendObjectDlg* itemDialog1 = this;
-
-    itemRadioButtonVal = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _("Send after update all variables"), wxPoint(10, 10), wxDefaultSize, wxRB_GROUP );
+    
+    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
+    itemDialog1->SetSizer(itemBoxSizer2);
+    
+    itemRadioButtonVal = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _("Send after update all variables"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
     itemRadioButtonVal->SetValue(true);
+    itemBoxSizer2->Add(itemRadioButtonVal, 0, wxALIGN_LEFT|wxALL, 5);
 
-    itemRadioButtonTime = new wxRadioButton( itemDialog1, ID_RADIOBUTTON1, _("Send every                    seconds"), wxPoint(10, 30), wxDefaultSize, 0 );
+    wxFlexGridSizer* itemFlexGridSizer4 = new wxFlexGridSizer(0, 3, 0, 0);
+    itemBoxSizer2->Add(itemFlexGridSizer4, 0, wxALIGN_LEFT|wxALL, 0);
+
+    itemRadioButtonTime = new wxRadioButton( itemDialog1, ID_RADIOBUTTON1, _("Send every  "), wxDefaultPosition, wxDefaultSize, 0 );
     itemRadioButtonTime->SetValue(false);
+    itemFlexGridSizer4->Add(itemRadioButtonTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemSpinCtrl = new wxSpinCtrl( itemDialog1, ID_SPINCTRL, wxT("1"), wxPoint(120, 30), wxSize(40, -1), wxSP_ARROW_KEYS, 1, 100, 1 );
+    itemSpinCtrl = new wxSpinCtrl( itemDialog1, ID_SPINCTRL, wxT("1"), wxDefaultPosition, wxSize(40, -1), wxSP_ARROW_KEYS, 1, 100, 1 );
     itemSpinCtrl->Enable(false);
+    itemFlexGridSizer4->Add(itemSpinCtrl, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxStaticText* itemStaticText1 = new wxStaticText( itemDialog1, wxID_STATIC, _("seconds."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer4->Add(itemStaticText1, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
 
     itemStaticTextSendString = new wxStaticText( itemDialog1, wxID_STATIC, _("Output sentence comes here;-)"), wxPoint(5, 60), wxSize(300, -1), 0 );
     itemStaticTextSendString->SetForegroundColour(wxColour(0, 0, 255));
+ //   itemStaticTextSendString->SetFont(wxFont(11, , wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Sans")));
+    itemBoxSizer2->Add(itemStaticTextSendString, 0, wxGROW|wxALL, 5);
     
-    itemTextCtrlFormatStrCtr = new wxTextCtrl( itemDialog1, ID_TEXTCTRL, wxEmptyString, wxPoint(5, 80), wxSize(300, 75), wxTE_MULTILINE );
+    itemTextCtrlFormatStrCtr = new wxTextCtrl( itemDialog1, ID_TEXTCTRL, wxEmptyString, wxPoint(5, 80), wxSize(300, 75), wxTE_MULTILINE|wxTE_WORDWRAP );
+    itemBoxSizer2->Add(itemTextCtrlFormatStrCtr, 0, wxGROW|wxALL, 5);
 
-    itemOKButton = new wxButton( itemDialog1, ID_BUTTON_OK1, _("OK"), wxPoint(230, 160), wxSize(70, 25), 0 );
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer1 = new wxStdDialogButtonSizer;
 
-    itemCancelButton = new wxButton( itemDialog1, ID_BUTTON_CANCEL, _("Cancel"), wxPoint(150, 160), wxSize(70, 25), 0 );
+    itemBoxSizer2->Add(itemStdDialogButtonSizer1, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxButton* itemButton11 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer1->AddButton(itemButton11);
+
+    wxButton* itemButton12 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer1->AddButton(itemButton12);
+
+    itemStdDialogButtonSizer1->Realize();
+    
+//    itemOKButton = new wxButton( itemDialog1, ID_BUTTON_OK1, _("OK"), wxPoint(230, 160), wxSize(70, 25), 0 );
+
+ //   itemCancelButton = new wxButton( itemDialog1, ID_BUTTON_CANCEL, _("Cancel"), wxPoint(150, 160), wxSize(70, 25), 0 );
 
 }
 
