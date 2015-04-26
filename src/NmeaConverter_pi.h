@@ -44,6 +44,7 @@
 #include "ec_defs.h"
 #include "ec_engine.h"
 
+#include <wx/arrstr.h> 
 #include <wx/dynarray.h>
 #include <wx/listctrl.h>
 #include <wx/fileconf.h>
@@ -113,7 +114,7 @@ public:
     nmeaSendObj();
     nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr);
     ~nmeaSendObj();
-    wxString GetFormatStr();
+    wxString GetFormatStr(){return FormatString;}
     void SetFormatString(wxString FormatStr);
     void SplitStringAlphaDigit(wxString theStr, wxString &alpha, long &digits);
     wxArrayString FindStartWithDollarSubSets(wxString FormatStr, wxString AllowdCharStr);

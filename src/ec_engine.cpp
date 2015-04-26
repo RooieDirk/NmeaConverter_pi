@@ -35,6 +35,7 @@ wxEcEngine::wxEcEngine()
 
 wxEcEngine::~wxEcEngine()
 {
+    
 }
 
 wxString wxEcEngine::GetFormula()

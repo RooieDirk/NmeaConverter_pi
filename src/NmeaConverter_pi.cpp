@@ -234,11 +234,11 @@ bool NmeaConverter_pi::LoadConfig( void )
 
 //************************************************************************************
 nmeaSendObj::nmeaSendObj()
-{
-    
+{    
 }
 nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
 {
+    //set some variables
     plugin = pi;
     DlgActive = false;
     SendMode = ALLVAL;
@@ -247,6 +247,7 @@ nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
     VarAlphaDigit = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
     VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     VarDigit = wxT("0123456789");
+    //parse Formatstring into arrays
     SetFormatString( FormatStr );
 }
 nmeaSendObj::~nmeaSendObj()
@@ -255,10 +256,6 @@ nmeaSendObj::~nmeaSendObj()
         p_timer->~localTimer();
 }
 
-wxString nmeaSendObj::GetFormatStr()
-{
-    return FormatString;
-}
 void nmeaSendObj::SetFormatString(wxString FormatStr)
 {
     if( FormatStr == wxEmptyString )
@@ -268,12 +265,11 @@ void nmeaSendObj::SetFormatString(wxString FormatStr)
     NeededVariables = FindStartWithDollarSubSets( FormatStr, VarAlphaDigit);
     //find needed Sentences
     NeededSentences = FindStartWithDollarSubSets( FormatStr, VarAlpha);
-    NeededSentencesMinusReceived = NeededSentences;
-    
+    NeededSentencesMinusReceived = NeededSentences;    
 }
 
 wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxString AllowdCharStr)
-{
+{  //Find pieces of text starting with'$' wich are the variables used
     int startpos=2;
     wxArrayString ReturnArray;
     while ( FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND )
@@ -332,21 +328,57 @@ void nmeaSendObj::ComputeOutputSentence()
     //The variablesArray is set in SetFormatString()
     for( int i = 0; i < NeededVariables.GetCount(); i++ )
     {
+        //split variable inname and number
         wxString Varkey = NeededVariables[i];
         wxString SenteceKey;
         long FieldNo;
         SplitStringAlphaDigit( Varkey, SenteceKey, FieldNo);
         
-        wxArrayString r; //array with tokenized nmea sentence
+        //put nmea sentence in array. each field in separate cell
+        wxArrayString nmeatokenarray; //array with tokenized nmea sentence
         wxString s = ReceivedSentencesrray[SenteceKey];
-        wxStringTokenizer tkz(s, wxT(","));
-        while ( tkz.HasMoreTokens() )
-            r.Add( tkz.GetNextToken() );
-        
-        if (r.GetCount() > 0 )
-            sendFormat.Replace( Varkey , r[FieldNo] );
+        wxStringTokenizer tkznmea(s, wxT(","));
+        while ( tkznmea.HasMoreTokens() )
+            nmeatokenarray.Add( tkznmea.GetNextToken() );
+        //replace variable name by value
+        if (nmeatokenarray.GetCount() > 0 )
+            sendFormat.Replace( Varkey , nmeatokenarray[FieldNo] );
         else
             sendFormat.Replace( Varkey , wxT("noData") );
+    }
+    //by now the variables in our formatstr ar replaced by values.
+    
+    //split formatstring in fields, so we can calculate each field apart
+    wxArrayString formattokenarray;
+    wxStringTokenizer tkzformat(sendFormat, wxT(","));
+        while ( tkzformat.HasMoreTokens() )
+            formattokenarray.Add( tkzformat.GetNextToken() );
+    for (int j=1 ; j < formattokenarray.GetCount(); j++)
+    {
+        wxString result;
+        wxEcEngine calc;
+        if (calc.SetFormula( formattokenarray[j] ))
+        {
+            result = wxString::Format(wxT("%.1f"), calc.Compute() );
+            if (calc.GetLastError() == wxECE_NOERROR)
+            {
+                wxPuts( result ); //well done !
+                 formattokenarray[j] = result;
+            }
+            //else
+                //wxLogError(calc.TranslateError(calc.GetLastError()));
+                //wxPuts(calc.TranslateError(calc.GetLastError()));//better luck next time !
+        }
+        else
+            wxPuts(calc.TranslateError(calc.GetLastError()));
+    }
+    // finaly glue the seperate tokens back to one sentence
+    
+    sendFormat = formattokenarray[0];
+    for (int j=1 ; j < formattokenarray.GetCount(); j++)
+    {
+        sendFormat.Append(_(","));
+        sendFormat.Append( formattokenarray[j] );
     }
     
     if ( DlgActive )
