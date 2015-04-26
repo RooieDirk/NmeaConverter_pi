@@ -25,14 +25,14 @@
  */
 
 
-#ifndef _DEMOPI_H_
-#define _DEMOPI_H_
+#ifndef NMEACONV_H
+#define NMEACONV_H
 
 #include "wx/wxprec.h"
 
-#ifndef  WX_PRECOMP
-  #include "wx/wx.h"
-#endif //precompiled headers
+#ifndef WX_PRECOMP
+      #include <wx/wx.h>
+#endif
 
 #include "version.h"
 
@@ -47,6 +47,7 @@
 #include <wx/dynarray.h>
 #include <wx/listctrl.h>
 #include <wx/fileconf.h>
+#include <wx/spinctrl.h>
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
@@ -105,24 +106,17 @@ private:
 
 class nmeaSendObj : wxObject
 {
-    // declare a hash map with string keys and bool values for sentences needed
-    WX_DECLARE_STRING_HASH_MAP( bool, NeededSentences );
-    NeededSentences::iterator it;
-    // declare a hash map with string keys and bool values for variables in format string
-    WX_DECLARE_STRING_HASH_MAP( wxString, Variables );
-    Variables::iterator vit;
-        // declare a hash map with string keys and string values for received sentences 
+    // declare a hash map with string keys and string values for received sentences 
     WX_DECLARE_STRING_HASH_MAP( wxString, ReceivedSentences );
-    ReceivedSentences::iterator sit;
+
 public:
     nmeaSendObj();
     nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr);
     ~nmeaSendObj();
-    bool UsesNmeaIDStr( wxString nmeaIDStr);
-    void SendNmea();
     wxString GetFormatStr();
     void SetFormatString(wxString FormatStr);
     void SplitStringAlphaDigit(wxString theStr, wxString &alpha, long &digits);
+    wxArrayString FindStartWithDollarSubSets(wxString FormatStr, wxString AllowdCharStr);
     void SetNMEASentence(wxString &sentence);
     void ComputeOutputSentence();
     int  ShowModal (wxWindow* parent);
@@ -132,11 +126,11 @@ public:
     int GetRepeatTime(){ return RepeatTime;}
 private:
     wxString FormatString;
-    wxArrayString FormatArrayStr;
-    NeededSentences NeededSentencesArray;
-    Variables VariablesArray;
+    wxArrayString NeededVariables;
+    wxArrayString NeededSentences;
+    wxArrayString NeededSentencesMinusReceived;
     ReceivedSentences ReceivedSentencesrray;
-    wxString VarAlowed;
+    wxString VarAlphaDigit;
     wxString VarAlpha;
     wxString VarDigit;
     NmeaConverter_pi* plugin;
@@ -162,7 +156,7 @@ private:
 
 
 ////@begin includes
-#include "wx/spinctrl.h"
+
 ////@end includes
 
 /*!
@@ -289,7 +283,7 @@ public:
     wxButton* itemCancelButton;
 };
 
-#endif
+#endif //NMEACONV_H
 
 
 

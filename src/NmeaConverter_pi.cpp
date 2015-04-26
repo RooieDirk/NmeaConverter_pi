@@ -26,11 +26,6 @@
  */
 
 
-#include "wx/wxprec.h"
-
-#ifndef  WX_PRECOMP
-  #include "wx/wx.h"
-#endif //precompiled headers
 
 #include <wx/tokenzr.h>
 #include "NmeaConverter_pi.h"
@@ -240,69 +235,64 @@ bool NmeaConverter_pi::LoadConfig( void )
 //************************************************************************************
 nmeaSendObj::nmeaSendObj()
 {
-    VarAlowed = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-    VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    VarDigit = wxT("0123456789");
+    
 }
 nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
 {
     plugin = pi;
-    SetFormatString( FormatStr );
     DlgActive = false;
     SendMode = ALLVAL;
     RepeatTime = 1;
     p_timer = NULL;
+    VarAlphaDigit = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+    VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    VarDigit = wxT("0123456789");
+    SetFormatString( FormatStr );
 }
 nmeaSendObj::~nmeaSendObj()
 {
     if (p_timer) 
         p_timer->~localTimer();
 }
-bool nmeaSendObj::UsesNmeaIDStr( wxString nmeaIDStr)
-{
-     return  false;
-}
-void nmeaSendObj::SendNmea()
-{
-}
+
 wxString nmeaSendObj::GetFormatStr()
 {
     return FormatString;
 }
 void nmeaSendObj::SetFormatString(wxString FormatStr)
 {
+    if( FormatStr == wxEmptyString )
+        FormatStr = wxT("$dummy format"); 
     FormatString=FormatStr;   
-    // parse into array string
-    FormatArrayStr.Clear(); 
-    wxStringTokenizer tkz(FormatStr, wxT(","));
-    while ( tkz.HasMoreTokens() )
-        FormatArrayStr.Add( tkz.GetNextToken() );
     //find needed Variables
-    for ( unsigned int i = 4; i < FormatString.Length(); i++)
-    {
-        if ( wxT("$") == FormatString.Mid(i,1) ) //a variable starts with "$"
-        {
-            wxString Vname ;//= FormatString[i];
-            while ( VarAlowed.Find( FormatString.Mid(i,1) ) != wxNOT_FOUND )
-            {
-                Vname.Append(FormatString.Mid(i,1));
-                if ( i < FormatString.Length() )
-                    i++;
-                else 
-                    break;
-            }
-            VariablesArray[Vname]= wxString(wxEmptyString);
-        }
-    }
+    NeededVariables = FindStartWithDollarSubSets( FormatStr, VarAlphaDigit);
     //find needed Sentences
-    for( vit = VariablesArray.begin(); vit != VariablesArray.end(); ++vit )
+    NeededSentences = FindStartWithDollarSubSets( FormatStr, VarAlpha);
+    NeededSentencesMinusReceived = NeededSentences;
+    
+}
+
+wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxString AllowdCharStr)
+{
+    int startpos=2;
+    wxArrayString ReturnArray;
+    while ( FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND )
     {
-        wxString Varkey = vit->first;
-        wxString SenteceKey;
-        long FieldNo;
-        SplitStringAlphaDigit( Varkey, SenteceKey, FieldNo);
-        NeededSentencesArray[SenteceKey] = false;
-    }
+        startpos = FormatStr.find( wxT("$"), startpos + 1 );
+        wxString SubString;
+        unsigned int i = startpos;
+      
+        while ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND & i < FormatStr.Length() )
+        {  
+            i++;
+        }
+        SubString.Append( FormatStr.SubString( startpos, i-1 ) ); 
+        if ( ReturnArray.Index( SubString ) == wxNOT_FOUND )
+               ReturnArray.Add( SubString );
+        startpos = i-1;
+    } 
+    
+    return ReturnArray;
 }
 
 void nmeaSendObj::SplitStringAlphaDigit(wxString theStr, wxString &alpha, long &digiti)
@@ -320,22 +310,19 @@ void nmeaSendObj::SetNMEASentence(wxString &sentence)
 {
     wxString NmeaID = sentence.Left( sentence.find(wxT(",")) );
 
-    if ( NeededSentencesArray.find(NmeaID) != NeededSentencesArray.end() )
+    if ( NeededSentences.Index(NmeaID) != wxNOT_FOUND )
     {
          ReceivedSentencesrray[NmeaID] = sentence;
-         NeededSentencesArray[NmeaID] = true;
-    }
-    
-    //if all variables are refreshed we can send the translated sentence
-    bool test = false;
-    for (it = NeededSentencesArray.begin(); it != NeededSentencesArray.end(); ++it) 
-        test = ( test | (bool)it->second );
-    if ( test )
-    {
-        ComputeOutputSentence();
-        for (it = NeededSentencesArray.begin(); it != NeededSentencesArray.end(); ++it) 
-            it->second = false;
-    }        
+         int i = NeededSentencesMinusReceived.Index(NmeaID);
+         if (  i != wxNOT_FOUND )
+             NeededSentencesMinusReceived.RemoveAt(i);
+         if ( NeededSentencesMinusReceived.IsEmpty() )
+         {
+             this->ComputeOutputSentence();
+             //wxPuts( wxString::Format( _("count: %i"), NeededSentencesMinusReceived.GetCount()));
+             NeededSentencesMinusReceived = NeededSentences;
+         }
+    }       
 }
 
 void nmeaSendObj::ComputeOutputSentence()
@@ -343,26 +330,25 @@ void nmeaSendObj::ComputeOutputSentence()
     wxString sendFormat = FormatString;
     //iterate thru variables and update values
     //The variablesArray is set in SetFormatString()
-    for( vit = VariablesArray.begin(); vit != VariablesArray.end(); ++vit )
+    for( int i = 0; i < NeededVariables.GetCount(); i++ )
     {
-        wxString Varkey = vit->first;
+        wxString Varkey = NeededVariables[i];
         wxString SenteceKey;
         long FieldNo;
         SplitStringAlphaDigit( Varkey, SenteceKey, FieldNo);
         
-        wxArrayString r;
+        wxArrayString r; //array with tokenized nmea sentence
         wxString s = ReceivedSentencesrray[SenteceKey];
         wxStringTokenizer tkz(s, wxT(","));
         while ( tkz.HasMoreTokens() )
             r.Add( tkz.GetNextToken() );
-        if ((FieldNo > -1) & ( FieldNo < r.Count() ))
-            vit->second = r[FieldNo];
+        
+        if (r.GetCount() > 0 )
+            sendFormat.Replace( Varkey , r[FieldNo] );
         else
-            vit->second = wxT("NoValidData");
+            sendFormat.Replace( Varkey , wxT("noData") );
     }
-    //the variable array is now updated with values. Now we replace the varibles in the formatstring by the values
-    for( vit = VariablesArray.begin(); vit != VariablesArray.end(); ++vit )
-        sendFormat.Replace( vit->first , vit->second );
+    
     if ( DlgActive )
         plugin-> p_nmeaSendObjectDlg->SetOutputStrTxt(sendFormat);
     else
