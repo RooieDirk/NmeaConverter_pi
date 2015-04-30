@@ -312,7 +312,7 @@ void nmeaSendObj::SetNMEASentence(wxString &sentence)
          int i = NeededSentencesMinusReceived.Index(NmeaID);
          if (  i != wxNOT_FOUND )
              NeededSentencesMinusReceived.RemoveAt(i);
-         if ( NeededSentencesMinusReceived.IsEmpty() )
+         if ( ( NeededSentencesMinusReceived.IsEmpty() )& !(NeededSentences.IsEmpty() ) )
          {
              this->ComputeOutputSentence();
              //wxPuts( wxString::Format( _("count: %i"), NeededSentencesMinusReceived.GetCount()));
@@ -362,15 +362,14 @@ void nmeaSendObj::ComputeOutputSentence()
             result = wxString::Format(wxT("%.1f"), calc.Compute() );
             if (calc.GetLastError() == wxECE_NOERROR)
             {
-                wxPuts( result ); //well done !
                  formattokenarray[j] = result;
             }
             //else
                 //wxLogError(calc.TranslateError(calc.GetLastError()));
                 //wxPuts(calc.TranslateError(calc.GetLastError()));//better luck next time !
         }
-        else
-            wxPuts(calc.TranslateError(calc.GetLastError()));
+        //else
+            //wxPuts(calc.TranslateError(calc.GetLastError()));
     }
     // finaly glue the seperate tokens back to one sentence
     
