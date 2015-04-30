@@ -137,6 +137,7 @@ private:
     NmeaConverter_pi* plugin;
     wxTimer* m_timer;
     bool DlgActive;
+    bool ValidFormatStr;
     SentenceSendMode SendMode;
     int RepeatTime;
     localTimer* p_timer;

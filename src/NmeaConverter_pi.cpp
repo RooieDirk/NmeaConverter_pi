@@ -175,10 +175,16 @@ void NmeaConverter_pi::ShowPreferencesDialog( wxWindow* parent )
         SaveConfig();
     }
     //DialogWindows are deleted after closing?? So we do it here and set pointers to NULL
-    prefDlg->~PreferenceDlg();
+    try
+    {
+        prefDlg->Destroy();
+ //       p_nmeaSendObjectDlg->Destroy();
+    }
+    catch(...)
+    { wxPuts(_("Dlg already deleted:_)"));}
+    
     prefDlg = NULL;
-    p_nmeaSendObjectDlg->~nmeaSendObjectDlg();
-    p_nmeaSendObjectDlg=NULL;    
+//    p_nmeaSendObjectDlg=NULL;    
 }
 
 bool NmeaConverter_pi::SaveConfig( void )
@@ -244,6 +250,7 @@ nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
     SendMode = ALLVAL;
     RepeatTime = 1;
     p_timer = NULL;
+    ValidFormatStr = false;
     VarAlphaDigit = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
     VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     VarDigit = wxT("0123456789");
@@ -265,7 +272,8 @@ void nmeaSendObj::SetFormatString(wxString FormatStr)
     NeededVariables = FindStartWithDollarSubSets( FormatStr, VarAlphaDigit);
     //find needed Sentences
     NeededSentences = FindStartWithDollarSubSets( FormatStr, VarAlpha);
-    NeededSentencesMinusReceived = NeededSentences;    
+    NeededSentencesMinusReceived = NeededSentences;  
+    
 }
 
 wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxString AllowdCharStr)
@@ -312,12 +320,15 @@ void nmeaSendObj::SetNMEASentence(wxString &sentence)
          int i = NeededSentencesMinusReceived.Index(NmeaID);
          if (  i != wxNOT_FOUND )
              NeededSentencesMinusReceived.RemoveAt(i);
-         if ( ( NeededSentencesMinusReceived.IsEmpty() )& !(NeededSentences.IsEmpty() ) )
-         {
-             this->ComputeOutputSentence();
-             //wxPuts( wxString::Format( _("count: %i"), NeededSentencesMinusReceived.GetCount()));
-             NeededSentencesMinusReceived = NeededSentences;
-         }
+         if ( NeededSentencesMinusReceived.IsEmpty() )
+             if ( ( NeededSentences.IsEmpty() ) & ( SendMode == TIMED )  )
+                 plugin->SendNMEASentence(FormatString);
+             else                 
+            {
+                this->ComputeOutputSentence();
+                //wxPuts( wxString::Format( _("count: %i"), NeededSentencesMinusReceived.GetCount()));
+                NeededSentencesMinusReceived = NeededSentences;
+            }
     }       
 }
 
@@ -403,6 +414,8 @@ int  nmeaSendObj::ShowModal (wxWindow* parent)
         SetFormatString(temp_FormatString);
         SendMode = temp_SendMode;
     }
+    plugin->p_nmeaSendObjectDlg->Destroy();
+    plugin->p_nmeaSendObjectDlg = NULL;
     DlgActive = false;
     return r;
 }
