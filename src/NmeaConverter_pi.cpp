@@ -515,6 +515,7 @@ bool PreferenceDlg::Create( wxWindow* parent, wxWindowID id, const wxString& cap
 
 PreferenceDlg::~PreferenceDlg()
 {
+    pi->prefDlg = NULL;
 }
 
 void PreferenceDlg::Init()
@@ -716,6 +717,7 @@ bool nmeaSendObjectDlg::Create( wxWindow* parent, wxWindowID id, const wxString&
 
 nmeaSendObjectDlg::~nmeaSendObjectDlg()
 {
+    SendObjOfThisDlg->plugin->p_nmeaSendObjectDlg = NULL;
 }
 
 void nmeaSendObjectDlg::Init()

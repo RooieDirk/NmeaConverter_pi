@@ -94,15 +94,13 @@ public:
     wxString ComputeChecksum( wxString sentence );
     wxString ReadNmeaInputToken(wxString SentencePlusNumber);
     nmeaSendObjectDlg* p_nmeaSendObjectDlg;
+    PreferenceDlg* prefDlg;
     MapOfnmeaSendObj ObjectMap;
     bool b_CheckChecksum;
 private:
     wxArrayString nmeaSentenceArray;
     wxArrayString nmeaIDArray;
-    wxFileConfig* m_pconfig; 
-    nmeaSendObj* x;
-    PreferenceDlg* prefDlg;
-    
+    wxFileConfig* m_pconfig;     
 };
 
 class nmeaSendObj : wxObject
@@ -125,6 +123,7 @@ public:
     SentenceSendMode GetSendMode(){ return SendMode;}
     void SetRepeatTime( int rtime);
     int GetRepeatTime(){ return RepeatTime;}
+    NmeaConverter_pi* plugin;
 private:
     wxString FormatString;
     wxArrayString NeededVariables;
@@ -134,7 +133,6 @@ private:
     wxString VarAlphaDigit;
     wxString VarAlpha;
     wxString VarDigit;
-    NmeaConverter_pi* plugin;
     wxTimer* m_timer;
     bool DlgActive;
     bool ValidFormatStr;
