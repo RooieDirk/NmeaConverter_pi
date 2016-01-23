@@ -48,18 +48,18 @@ IF(MSVC)
     ADD_DEFINITIONS(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_DEPRECATE)
 ENDIF(MSVC)
 
-FIND_PACKAGE(wxWidgets REQUIRED)
-INCLUDE(${wxWidgets_USE_FILE})
-    MESSAGE (STATUS "Found wxWidgets..." )
-    MESSAGE (STATUS "${wxWidgets_LIBRARIES}")
 SET(wxWidgets_USE_LIBS base core net xml html adv)
 SET(BUILD_SHARED_LIBS TRUE)
+
+FIND_PACKAGE(wxWidgets REQUIRED)
 
 IF(MSYS)
 # this is just a hack. I think the bug is in FindwxWidgets.cmake
 STRING( REGEX REPLACE "/usr/local" "\\\\;C:/MinGW/msys/1.0/usr/local" wxWidgets_INCLUDE_DIRS ${wxWidgets_INCLUDE_DIRS} )
 ENDIF(MSYS)
-    
+
+INCLUDE(${wxWidgets_USE_FILE})
+
 FIND_PACKAGE(OpenGL)
 IF(OPENGL_GLU_FOUND)
 
