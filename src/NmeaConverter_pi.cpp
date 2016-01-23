@@ -730,7 +730,7 @@ void nmeaSendObjectDlg::CreateControls()
     nmeaSendObjectDlg* itemDialog1 = this;
     
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
-    itemDialog1->SetSizer(itemBoxSizer2);
+
     
     itemRadioButtonVal = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _("Send after update all variables"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
     itemRadioButtonVal->SetValue(true);
@@ -769,11 +769,9 @@ void nmeaSendObjectDlg::CreateControls()
     itemStdDialogButtonSizer1->AddButton(itemButton12);
 
     itemStdDialogButtonSizer1->Realize();
-    
-//    itemOKButton = new wxButton( itemDialog1, ID_BUTTON_OK1, _("OK"), wxPoint(230, 160), wxSize(70, 25), 0 );
-
- //   itemCancelButton = new wxButton( itemDialog1, ID_BUTTON_CANCEL, _("Cancel"), wxPoint(150, 160), wxSize(70, 25), 0 );
-
+    itemStdDialogButtonSizer1->Fit(this);
+    itemDialog1->SetSizer(itemBoxSizer2);
+    itemBoxSizer2->Fit(this);
 }
 
 void nmeaSendObjectDlg::SetSendObjOfThisDlg( nmeaSendObj* object)
