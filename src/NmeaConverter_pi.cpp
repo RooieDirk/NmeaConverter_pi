@@ -286,7 +286,8 @@ wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxStri
         wxString SubString;
         unsigned int i = startpos;
       
-        while ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND & i < FormatStr.Length() )
+        while ( ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND ) & 
+                ( i < FormatStr.Length() ) )
         {  
             i++;
         }
@@ -318,9 +319,10 @@ void nmeaSendObj::SetNMEASentence(wxString &sentence)
     {
          ReceivedSentencesrray[NmeaID] = sentence;
          int i = NeededSentencesMinusReceived.Index(NmeaID);
-         if (  i != wxNOT_FOUND )
-             NeededSentencesMinusReceived.RemoveAt(i);
+         if (  i != wxNOT_FOUND ){
+             NeededSentencesMinusReceived.RemoveAt(i);}
          if ( NeededSentencesMinusReceived.IsEmpty() )
+         {
              if ( ( NeededSentences.IsEmpty() ) & ( SendMode == TIMED )  )
                  plugin->SendNMEASentence(FormatString);
              else                 
@@ -329,6 +331,7 @@ void nmeaSendObj::SetNMEASentence(wxString &sentence)
                 //wxPuts( wxString::Format( _("count: %i"), NeededSentencesMinusReceived.GetCount()));
                 NeededSentencesMinusReceived = NeededSentences;
             }
+         }
     }       
 }
 
@@ -337,7 +340,7 @@ void nmeaSendObj::ComputeOutputSentence()
     wxString sendFormat = FormatString;
     //iterate thru variables and update values
     //The variablesArray is set in SetFormatString()
-    for( int i = 0; i < NeededVariables.GetCount(); i++ )
+    for( int i = 0; i < (int)NeededVariables.GetCount(); i++ )
     {
         //split variable inname and number
         wxString Varkey = NeededVariables[i];
@@ -352,7 +355,7 @@ void nmeaSendObj::ComputeOutputSentence()
         while ( tkznmea.HasMoreTokens() )
             nmeatokenarray.Add( tkznmea.GetNextToken() );
         //replace variable name by value
-        if (nmeatokenarray.GetCount() > 0 )
+        if ((long)nmeatokenarray.GetCount() >= FieldNo )
             sendFormat.Replace( Varkey , nmeatokenarray[FieldNo] );
         else
             sendFormat.Replace( Varkey , wxT("noData") );
@@ -364,13 +367,30 @@ void nmeaSendObj::ComputeOutputSentence()
     wxStringTokenizer tkzformat(sendFormat, wxT(","));
         while ( tkzformat.HasMoreTokens() )
             formattokenarray.Add( tkzformat.GetNextToken() );
-    for (int j=1 ; j < formattokenarray.GetCount(); j++)
+    for (int j=1 ; j < (int)formattokenarray.GetCount(); j++)
     {
+        // find max number of decimals so we can set the output later to the right amount of needed decimals.
+        int NoOfDecimals = 0;
+        int IinString = 0;
+        wxString s=formattokenarray[j];
+        while ( s.find( _("."), IinString) !=  wxNOT_FOUND )
+        {
+            IinString = s.find( _("."), IinString);
+            int n=0;
+            while ( (IinString + 1 < (int)s.Len() ) &
+                    ( VarDigit.Find(s.Mid(IinString+1,1)) != wxNOT_FOUND ) )
+            {
+                n++;
+                IinString++;
+            }
+            if ( n > NoOfDecimals )
+                NoOfDecimals = n;
+        }
         wxString result;
         wxEcEngine calc;
         if (calc.SetFormula( formattokenarray[j] ))
         {
-            result = wxString::Format(wxT("%.1f"), calc.Compute() );
+            result = wxString::Format(wxT("%.*f"), NoOfDecimals, calc.Compute() );
             if (calc.GetLastError() == wxECE_NOERROR)
             {
                  formattokenarray[j] = result;
@@ -385,7 +405,7 @@ void nmeaSendObj::ComputeOutputSentence()
     // finaly glue the seperate tokens back to one sentence
     
     sendFormat = formattokenarray[0];
-    for (int j=1 ; j < formattokenarray.GetCount(); j++)
+    for (int j=1 ; j < (int)formattokenarray.GetCount(); j++)
     {
         sendFormat.Append(_(","));
         sendFormat.Append( formattokenarray[j] );
