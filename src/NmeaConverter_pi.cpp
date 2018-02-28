@@ -153,7 +153,21 @@ int NmeaConverter_pi::AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode
     object->SetRepeatTime( RepTime );
     return index;
 }
-
+void NmeaConverter_pi::ClearAllObjectsInMap()
+{
+    if ( !ObjectMap.empty() ) 
+    {
+        int i = 0;
+        while(i < ObjectMap.size() ) //clear the ojects
+        {
+            nmeaSendObj* CurrObj = ObjectMap[i];
+            delete CurrObj;
+            i++;
+        }
+        wxPuts(_("after for loop"));
+        ObjectMap.clear(); //and clear the map
+    }
+}
 wxString NmeaConverter_pi::ComputeChecksum( wxString sentence )
 {
     unsigned char calculated_checksum = 0;
@@ -166,18 +180,21 @@ wxString NmeaConverter_pi::ComputeChecksum( wxString sentence )
 
 void NmeaConverter_pi::ShowPreferencesDialog( wxWindow* parent )
 {
+    LoadConfig();
     if ( prefDlg == NULL )
     {        
         prefDlg = new PreferenceDlg(this, parent);
     }
+    
     if ( prefDlg->ShowModal() == wxID_OK )
     {
-        SaveConfig();
+        SaveConfig();        
     }
     //DialogWindows are deleted after closing?? So we do it here and set pointers to NULL
     try
     {
         prefDlg->Destroy();
+        prefDlg = NULL;
  //       p_nmeaSendObjectDlg->Destroy();
     }
     catch(...)
@@ -220,7 +237,7 @@ bool NmeaConverter_pi::LoadConfig( void )
         pConf->Read( _T("DoUseCheckSums"), &b_CheckChecksum, true );
         int o_cnt;
         pConf->Read( _T("ObjectCount"), &o_cnt, -1 );
-        ObjectMap.empty();
+        ClearAllObjectsInMap();
         for( int i = 1; i <= o_cnt; i++ )
         {
             pConf->SetPath( wxString::Format( _T("/PlugIns/NmeaConverter/Object%d"), i  ) );
@@ -259,8 +276,12 @@ nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
 }
 nmeaSendObj::~nmeaSendObj()
 {
-    if (p_timer) 
-        p_timer->~localTimer();
+    if (p_timer != NULL) 
+    {
+        localTimer* t = p_timer;
+        delete t;
+    }
+       
 }
 
 void nmeaSendObj::SetFormatString(wxString FormatStr)

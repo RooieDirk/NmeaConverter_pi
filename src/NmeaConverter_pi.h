@@ -91,6 +91,7 @@ public:
     bool LoadConfig( void );
     bool nmeaIsValid( wxString &sentence);
     int AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode = ALLVAL, int RepTime = 1);
+    void ClearAllObjectsInMap();
     wxString ComputeChecksum( wxString sentence );
     wxString ReadNmeaInputToken(wxString SentencePlusNumber);
     nmeaSendObjectDlg* p_nmeaSendObjectDlg;
@@ -133,7 +134,7 @@ private:
     wxString VarAlphaDigit;
     wxString VarAlpha;
     wxString VarDigit;
-    wxTimer* m_timer;
+    //wxTimer* m_timer;
     bool DlgActive;
     bool ValidFormatStr;
     SentenceSendMode SendMode;
