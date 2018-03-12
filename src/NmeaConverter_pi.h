@@ -52,6 +52,8 @@
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
+
+
 class nmeaSendObj;
 class nmeaSendObjectDlg;
 class PreferenceDlg;
@@ -130,7 +132,7 @@ private:
     wxArrayString NeededVariables;
     wxArrayString NeededSentences;
     wxArrayString NeededSentencesMinusReceived;
-    ReceivedSentences ReceivedSentencesrray;
+    ReceivedSentences ReceivedSentencesMap;
     wxString VarAlphaDigit;
     wxString VarAlpha;
     wxString VarDigit;
@@ -283,6 +285,7 @@ public:
     wxButton* itemOKButton;
     wxButton* itemCancelButton;
 };
+
 
 #endif //NMEACONV_H
 

@@ -99,15 +99,16 @@ wxString NmeaConverter_pi::GetLongDescription()
 void NmeaConverter_pi::SetNMEASentence(wxString &sentence)
 {
     wxString s = sentence; //local copy of sentence
-    wxString nmeaID;
     s.Trim(); // Removes white-space (space, tabs, form feed, newline and carriage return)
     if ( b_CheckChecksum )
     {
         if ( nmeaIsValid( s ) )
         {
             //send to all objects
-            for( objit = ObjectMap.begin(); objit != ObjectMap.end(); ++objit )
-                objit->second->SetNMEASentence(s);       
+            //for( objit = ObjectMap.begin(); objit != ObjectMap.end(); ++objit )
+            for ( auto const &ent1 : ObjectMap)
+                ent1.second->SetNMEASentence(s);
+                //objit->second->SetNMEASentence(s);       
         }
     }
 }
@@ -164,7 +165,6 @@ void NmeaConverter_pi::ClearAllObjectsInMap()
             delete CurrObj;
             i++;
         }
-        wxPuts(_("after for loop"));
         ObjectMap.clear(); //and clear the map
     }
 }
@@ -268,8 +268,8 @@ nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
     RepeatTime = 1;
     p_timer = NULL;
     ValidFormatStr = false;
-    VarAlphaDigit = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-    VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    VarAlphaDigit = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?");
+    VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ?");
     VarDigit = wxT("0123456789");
     //parse Formatstring into arrays
     SetFormatString( FormatStr );
@@ -287,37 +287,59 @@ nmeaSendObj::~nmeaSendObj()
 void nmeaSendObj::SetFormatString(wxString FormatStr)
 {
     if( FormatStr == wxEmptyString )
-        FormatStr = wxT("$dummy format"); 
+        FormatStr = wxT("$DummyFormat"); 
     FormatString=FormatStr;   
     //find needed Variables
     NeededVariables = FindStartWithDollarSubSets( FormatStr, VarAlphaDigit);
     //find needed Sentences
-    NeededSentences = FindStartWithDollarSubSets( FormatStr, VarAlpha);
-    NeededSentencesMinusReceived = NeededSentences;  
+    NeededSentences.Clear();
+    int i = 0;
     
+    while ( i < NeededVariables.Count() )
+    {
+        int j = 0;
+        while (( ( VarAlpha.Find(NeededVariables[i].Mid(j,1)) != wxNOT_FOUND ) ) && 
+                (j < NeededVariables[i].Length()-1))
+          j++;
+
+        if ( NeededSentences.Index( NeededVariables[i].Mid(0,j) ) == wxNOT_FOUND )
+            NeededSentences.Add( NeededVariables[i].Mid(0,j) );
+        i++;
+    }
+    NeededSentencesMinusReceived = NeededSentences;   
 }
 
 wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxString AllowdCharStr)
 {  //Find pieces of text starting with'$' wich are the variables used
     int startpos=2;
     wxArrayString ReturnArray;
-    while ( FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND )
+    if (FormatStr.Length() > 4)
     {
-        startpos = FormatStr.find( wxT("$"), startpos + 1 );
-        wxString SubString;
-        unsigned int i = startpos;
-      
-        while ( ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND ) & 
-                ( i < FormatStr.Length() ) )
-        {  
-            i++;
-        }
-        SubString.Append( FormatStr.SubString( startpos, i-1 ) ); 
-        if ( ReturnArray.Index( SubString ) == wxNOT_FOUND )
-               ReturnArray.Add( SubString );
-        startpos = i-1;
-    } 
-    
+        while ( FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND )
+        {
+            startpos = FormatStr.find( wxT("$"), startpos + 1 );
+            wxString SubString;
+            unsigned int i = startpos;
+        
+            while ( ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND ) & 
+                    ( i < FormatStr.Length() ) )
+            {  
+                i++;
+            }
+            
+            SubString.Append( FormatStr.SubString( startpos, i-1 ) );
+            // Check if Substring has a valid value. Should end with a digit
+            long test = 0;
+            wxString s;
+            SplitStringAlphaDigit(SubString, s, test);
+            if ( test > 0 )
+                if ( ReturnArray.Index( SubString ) == wxNOT_FOUND )
+                    {
+                        ReturnArray.Add( SubString );
+                    }
+            startpos = i-1;
+        } 
+    }
     return ReturnArray;
 }
 
@@ -334,32 +356,31 @@ void nmeaSendObj::SplitStringAlphaDigit(wxString theStr, wxString &alpha, long &
 
 void nmeaSendObj::SetNMEASentence(wxString &sentence)
 {
-    wxString NmeaID = sentence.Left( sentence.find(wxT(",")) );
-
-    if ( NeededSentences.Index(NmeaID) != wxNOT_FOUND )
+    int i = 0;
+    while ( i < NeededSentences.GetCount() )
     {
-         ReceivedSentencesrray[NmeaID] = sentence;
-         int i = NeededSentencesMinusReceived.Index(NmeaID);
-         if (  i != wxNOT_FOUND ){
-             NeededSentencesMinusReceived.RemoveAt(i);}
-         if ( NeededSentencesMinusReceived.IsEmpty() )
-         {
-             if ( ( NeededSentences.IsEmpty() ) & ( SendMode == TIMED )  )
-                 plugin->SendNMEASentence(FormatString);
-             else                 
-            {
-                this->ComputeOutputSentence();
-                //wxPuts( wxString::Format( _("count: %i"), NeededSentencesMinusReceived.GetCount()));
-                NeededSentencesMinusReceived = NeededSentences;
+        wxString s = sentence.Left( NeededSentences[i].Length() );
+        if  ( s.Matches(NeededSentences[i]) ) //we have a wildcard match
+        {
+            ReceivedSentencesMap[NeededSentences[i]] = sentence; //save sentence
+            int j = NeededSentencesMinusReceived.Index(NeededSentences[i]);
+            if (  j != wxNOT_FOUND ){//!= wxNOT_FOUND )
+                NeededSentencesMinusReceived.RemoveAt(j);
             }
-         }
-    }       
+        }
+        i++;
+    }
+    if ( NeededSentencesMinusReceived.IsEmpty() & ( SendMode == ALLVAL) )
+    {
+        ComputeOutputSentence();
+        NeededSentencesMinusReceived = NeededSentences;
+    }
 }
 
 void nmeaSendObj::ComputeOutputSentence()
 {
     wxString sendFormat = FormatString;
-    //iterate thru variables and update values
+    //iterate through variables and update values
     //The variablesArray is set in SetFormatString()
     for( int i = 0; i < (int)NeededVariables.GetCount(); i++ )
     {
@@ -371,7 +392,7 @@ void nmeaSendObj::ComputeOutputSentence()
         
         //put nmea sentence in array. each field in separate cell
         wxArrayString nmeatokenarray; //array with tokenized nmea sentence
-        wxString s = ReceivedSentencesrray[SenteceKey];
+        wxString s = ReceivedSentencesMap[SenteceKey];
         wxStringTokenizer tkznmea(s, wxT(","));
         while ( tkznmea.HasMoreTokens() )
             nmeatokenarray.Add( tkznmea.GetNextToken() );
@@ -381,7 +402,7 @@ void nmeaSendObj::ComputeOutputSentence()
         else
             sendFormat.Replace( Varkey , wxT("noData") );
     }
-    //by now the variables in our formatstr ar replaced by values.
+    //by now the variables in our formatstr are replaced by values.
     
     //split formatstring in fields, so we can calculate each field apart
     wxArrayString formattokenarray;
@@ -416,12 +437,7 @@ void nmeaSendObj::ComputeOutputSentence()
             {
                  formattokenarray[j] = result;
             }
-            //else
-                //wxLogError(calc.TranslateError(calc.GetLastError()));
-                //wxPuts(calc.TranslateError(calc.GetLastError()));//better luck next time !
         }
-        //else
-            //wxPuts(calc.TranslateError(calc.GetLastError()));
     }
     // finaly glue the seperate tokens back to one sentence
     
@@ -881,4 +897,5 @@ bool nmeaSendObjectDlg::ShowToolTips()
 {
     return true;
 }
+
 ;
