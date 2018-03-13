@@ -158,7 +158,7 @@ void NmeaConverter_pi::ClearAllObjectsInMap()
 {
     if ( !ObjectMap.empty() ) 
     {
-        int i = 0;
+        unsigned int i = 0;
         while(i < ObjectMap.size() ) //clear the ojects
         {
             nmeaSendObj* CurrObj = ObjectMap[i];
@@ -293,12 +293,11 @@ void nmeaSendObj::SetFormatString(wxString FormatStr)
     NeededVariables = FindStartWithDollarSubSets( FormatStr, VarAlphaDigit);
     //find needed Sentences
     NeededSentences.Clear();
-    int i = 0;
-    
+    unsigned int i = 0;    
     while ( i < NeededVariables.Count() )
     {
-        int j = 0;
-        while (( ( VarAlpha.Find(NeededVariables[i].Mid(j,1)) != wxNOT_FOUND ) ) && 
+        unsigned int j = 0;
+        while (( ( VarAlpha.Find(NeededVariables[i].Mid(j,1)) >= 0 ) ) && 
                 (j < NeededVariables[i].Length()-1))
           j++;
 
@@ -315,7 +314,7 @@ wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxStri
     wxArrayString ReturnArray;
     if (FormatStr.Length() > 4)
     {
-        while ( FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND )
+        while ( FormatStr.find( wxT("$"), startpos ) >= 0 )
         {
             startpos = FormatStr.find( wxT("$"), startpos + 1 );
             wxString SubString;
@@ -356,7 +355,7 @@ void nmeaSendObj::SplitStringAlphaDigit(wxString theStr, wxString &alpha, long &
 
 void nmeaSendObj::SetNMEASentence(wxString &sentence)
 {
-    int i = 0;
+    unsigned int i = 0;
     while ( i < NeededSentences.GetCount() )
     {
         wxString s = sentence.Left( NeededSentences[i].Length() );
@@ -415,12 +414,12 @@ void nmeaSendObj::ComputeOutputSentence()
         int NoOfDecimals = 0;
         int IinString = 0;
         wxString s=formattokenarray[j];
-        while ( s.find( _("."), IinString) !=  wxNOT_FOUND )
+        while ( s.find( _("."), IinString) >= 0 )
         {
             IinString = s.find( _("."), IinString);
             int n=0;
             while ( (IinString + 1 < (int)s.Len() ) &
-                    ( VarDigit.Find(s.Mid(IinString+1,1)) != wxNOT_FOUND ) )
+                    ( VarDigit.Find(s.Mid(IinString+1,1)) >= 0 ) )
             {
                 n++;
                 IinString++;
