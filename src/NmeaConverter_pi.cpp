@@ -294,7 +294,7 @@ void nmeaSendObj::SetFormatString(wxString FormatStr)
     //find needed Sentences
     NeededSentences.Clear();
     unsigned int i = 0; 
-    std::cout << "SetFormatString before first while.  FormatStr=" << FormatStr << std::endl;
+
     while ( i < NeededVariables.Count() )
     {
         unsigned int j = 0;
@@ -314,17 +314,12 @@ wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxStri
     size_t startpos=2;
     
     wxArrayString ReturnArray;
-    std::cout << "FindStartWithDollarSubSets. 320 FormatStr=" << FormatStr << std::endl;
 
     {
         while ( (FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND) &&( startpos < FormatStr.Length() ))
         {
-            //std::cout << "FindStartWithDollarSubSets. while 325 startpos=" << startpos << std::endl;
             startpos = FormatStr.find( wxT("$"), startpos );
             size_t i = startpos;
-           
-            
-            //std::cout << "FindStartWithDollarSubSets. while 329 startpos=" << startpos << std::endl;
         
             while ( ( AllowdCharStr.find(FormatStr.Mid(i,1)) != (size_t)wxNOT_FOUND ) & 
                     ( i < FormatStr.Length() ) )
@@ -333,7 +328,6 @@ wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxStri
             }
             
             wxString SubString= FormatStr.SubString( startpos, i-1 );
-            std::cout << "FindStartWithDollarSubSets. 336 SubString=" << SubString << std::endl;
             // Check if Substring has a valid value. Should end with a digit
             long test = 0;
             wxString s;
