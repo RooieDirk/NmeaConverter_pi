@@ -271,7 +271,7 @@ nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
     VarAlphaDigit = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?");
     VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ?");
     VarDigit = wxT("0123456789");
-    //parse Formatstring into arrays
+    //parse Formatstring into arrays 
     SetFormatString( FormatStr );
 }
 nmeaSendObj::~nmeaSendObj()
@@ -287,13 +287,14 @@ nmeaSendObj::~nmeaSendObj()
 void nmeaSendObj::SetFormatString(wxString FormatStr)
 {
     if( FormatStr == wxEmptyString )
-        FormatStr = wxT("$DummyFormat"); 
+        FormatStr = wxT("$DummyFormat");
     FormatString=FormatStr;   
     //find needed Variables
     NeededVariables = FindStartWithDollarSubSets( FormatStr, VarAlphaDigit);
     //find needed Sentences
     NeededSentences.Clear();
-    unsigned int i = 0;    
+    unsigned int i = 0; 
+    std::cout << "SetFormatString before first while.  FormatStr=" << FormatStr << std::endl;
     while ( i < NeededVariables.Count() )
     {
         unsigned int j = 0;
@@ -310,38 +311,43 @@ void nmeaSendObj::SetFormatString(wxString FormatStr)
 
 wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxString AllowdCharStr)
 {  //Find pieces of text starting with'$' wich are the variables used
-    int startpos=2;
+    size_t startpos=2;
+    
     wxArrayString ReturnArray;
-    if (FormatStr.Length() > 4)
+    std::cout << "FindStartWithDollarSubSets. 320 FormatStr=" << FormatStr << std::endl;
+
     {
-        while ( FormatStr.find( wxT("$"), startpos ) >= 0 )
+        while ( (FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND) &&( startpos < FormatStr.Length() ))
         {
-            startpos = FormatStr.find( wxT("$"), startpos + 1 );
-            wxString SubString;
-            unsigned int i = startpos;
+            //std::cout << "FindStartWithDollarSubSets. while 325 startpos=" << startpos << std::endl;
+            startpos = FormatStr.find( wxT("$"), startpos );
+            size_t i = startpos;
+           
+            
+            //std::cout << "FindStartWithDollarSubSets. while 329 startpos=" << startpos << std::endl;
         
-            while ( ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND ) & 
+            while ( ( AllowdCharStr.find(FormatStr.Mid(i,1)) != (size_t)wxNOT_FOUND ) & 
                     ( i < FormatStr.Length() ) )
             {  
                 i++;
             }
             
-            SubString.Append( FormatStr.SubString( startpos, i-1 ) );
+            wxString SubString= FormatStr.SubString( startpos, i-1 );
+            std::cout << "FindStartWithDollarSubSets. 336 SubString=" << SubString << std::endl;
             // Check if Substring has a valid value. Should end with a digit
             long test = 0;
             wxString s;
             SplitStringAlphaDigit(SubString, s, test);
-            if ( test > 0 )
+            if (( test > 0 ) && (SubString.Length() > 4))
                 if ( ReturnArray.Index( SubString ) == wxNOT_FOUND )
                     {
                         ReturnArray.Add( SubString );
                     }
-            startpos = i-1;
+            startpos = i;
         } 
     }
     return ReturnArray;
 }
-
 void nmeaSendObj::SplitStringAlphaDigit(wxString theStr, wxString &alpha, long &digiti)
 {
     wxString digit;
@@ -414,12 +420,12 @@ void nmeaSendObj::ComputeOutputSentence()
         int NoOfDecimals = 0;
         int IinString = 0;
         wxString s=formattokenarray[j];
-        while ( s.find( _("."), IinString) >= 0 )
+        while ( s.find( _("."), IinString) != (size_t)wxNOT_FOUND )
         {
             IinString = s.find( _("."), IinString);
             int n=0;
             while ( (IinString + 1 < (int)s.Len() ) &
-                    ( VarDigit.Find(s.Mid(IinString+1,1)) >= 0 ) )
+                    ( VarDigit.Find(s.Mid(IinString+1,1)) != wxNOT_FOUND ) )
             {
                 n++;
                 IinString++;
@@ -684,8 +690,7 @@ void PreferenceDlg::OnListViewSelected( wxListEvent& event )
     event.Skip();
 }
 void PreferenceDlg::UpdateListCtrFromMap()
-{
-    int index = 0;      
+{     
     itemListView->DeleteAllItems();
     for( pi->objit = pi->ObjectMap.begin(); pi->objit != pi->ObjectMap.end(); ++pi->objit )
     {
