@@ -101,20 +101,26 @@ void NmeaConverter_pi::SetNMEASentence(wxString &sentence)
     wxString s = sentence; //local copy of sentence
     s.Trim(); // Removes white-space (space, tabs, form feed, newline and carriage return)
     if ( b_CheckChecksum )
-    {
+    {      
         if ( nmeaIsValid( s ) )
         {
             //send to all objects
-            //for( objit = ObjectMap.begin(); objit != ObjectMap.end(); ++objit )
             for ( auto const &ent1 : ObjectMap)
                 ent1.second->SetNMEASentence(s);
                 //objit->second->SetNMEASentence(s);       
         }
     }
+    else
+    {
+        for ( auto const &ent1 : ObjectMap)
+                ent1.second->SetNMEASentence(s);
+    }
+    
 }
 
 void NmeaConverter_pi::SendNMEASentence(wxString sentence)
 {
+    sentence.Trim();
     wxString Checksum = ComputeChecksum(sentence);
     sentence = sentence.Append(wxT("*"));
     sentence = sentence.Append(Checksum);
