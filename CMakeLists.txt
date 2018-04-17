@@ -1,11 +1,12 @@
 #---------------------------------------------------------------------------
-# Author:      Pavel Kalian
-# Copyright:   2014
-# License:     GPLv2 License
+# Author:      Dirk Smits
+# Copyright:   2018
+# License:     GPLv3 License
 #---------------------------------------------------------------------------
 
 #define minimum cmake version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.2)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 PROJECT(nmeaconverter_pi)
 
