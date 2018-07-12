@@ -148,7 +148,7 @@ bool NmeaConverter_pi::nmeaIsValid( wxString &sentence)
     return r;
 }
 
-int NmeaConverter_pi::AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode, int RepTime)
+int NmeaConverter_pi::AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode, int RepTime, bool Degr)
 {
     int index;
     if ( ObjectMap.empty() ) // map is wxEmptyString
@@ -158,6 +158,7 @@ int NmeaConverter_pi::AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode
     ObjectMap[index] = object;
     object->SetSendMode( Mode );
     object->SetRepeatTime( RepTime );
+    object->UseDegrees = Degr;
     return index;
 }
 void NmeaConverter_pi::ClearAllObjectsInMap()
@@ -227,6 +228,7 @@ bool NmeaConverter_pi::SaveConfig( void )
             pConf->Write( _T("FormatString"),CurrObj->GetFormatStr() );
             pConf->Write( _T("SendMode"),int(CurrObj->GetSendMode() ) );
             pConf->Write( _T("RepeatTime"),int(CurrObj->GetRepeatTime() ) );
+            pConf->Write( _T("CalcDegrees"),bool(CurrObj->UseDegrees ) );
             i++;
         }
         return true;
@@ -253,7 +255,9 @@ bool NmeaConverter_pi::LoadConfig( void )
             pConf->Read( _T("SendMode"), &SendModeInt, int(ALLVAL) );
             int RepTime;
             pConf->Read( _T("RepeatTime"), &RepTime, 1 );
-              AddObjectToMap( new nmeaSendObj( this, FormatS), SentenceSendMode(SendModeInt), RepTime  );
+            bool UseDeg;
+            pConf->Read( _T("CalcDegrees"), &UseDeg, false );
+              AddObjectToMap( new nmeaSendObj( this, FormatS), SentenceSendMode(SendModeInt), RepTime, UseDeg  );
             
         }
         return true;
@@ -435,6 +439,7 @@ void nmeaSendObj::ComputeOutputSentence()
         }
         wxString result;
         wxEcEngine calc;
+        if (UseDegrees) calc.SetTrigonometricMode(wxECA_DEGREE);
         if (calc.SetFormula( formattokenarray[j] ))
         {
             result = wxString::Format(wxT("%.*f"), NoOfDecimals, calc.Compute() );
@@ -746,7 +751,7 @@ BEGIN_EVENT_TABLE( nmeaSendObjectDlg, wxDialog )
     EVT_TEXT( ID_TEXTCTRL, nmeaSendObjectDlg::OnTextctrlTextUpdated )
     EVT_BUTTON( ID_BUTTON_OK1, nmeaSendObjectDlg::OnButtonOkClick )
     EVT_BUTTON( ID_BUTTON_CANCEL, nmeaSendObjectDlg::OnButtonCancelClick )
-
+    EVT_CHECKBOX( ID_CHECKBOXDEG, nmeaSendObjectDlg::OnUseDegreesClick )
 END_EVENT_TABLE()
 
 
@@ -811,6 +816,8 @@ void nmeaSendObjectDlg::CreateControls()
     wxStaticText* itemStaticText1 = new wxStaticText( itemDialog1, wxID_STATIC, _("seconds."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer4->Add(itemStaticText1, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemCheckBoxUseDegrees = new wxCheckBox( itemDialog1, ID_CHECKBOXDEG, _("Calculate using degrees"), wxDefaultPosition, wxDefaultSize, 0 );        
+    itemBoxSizer2->Add(itemCheckBoxUseDegrees, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     itemStaticTextSendString = new wxStaticText( itemDialog1, wxID_STATIC, _("Output sentence comes here;-)"), wxPoint(5, 60), wxSize(300, -1), 0 );
     itemStaticTextSendString->SetForegroundColour(wxColour(0, 0, 255));
@@ -852,6 +859,7 @@ void nmeaSendObjectDlg::SetSendObjOfThisDlg( nmeaSendObj* object)
         itemSpinCtrl->Enable(true);
     }
     itemSpinCtrl->SetValue( SendObjOfThisDlg->GetRepeatTime() );
+    itemCheckBoxUseDegrees->SetValue( SendObjOfThisDlg->UseDegrees );
 }
 
 void nmeaSendObjectDlg::SetOutputStrTxt(wxString str)
@@ -895,6 +903,10 @@ void nmeaSendObjectDlg::OnButtonCancelClick( wxCommandEvent& event )
 {
     this->EndModal( wxID_CANCEL );
     event.Skip();
+}
+void nmeaSendObjectDlg::OnUseDegreesClick ( wxCommandEvent& event )
+{
+    SendObjOfThisDlg->UseDegrees = itemCheckBoxUseDegrees->GetValue();
 }
 
 bool nmeaSendObjectDlg::ShowToolTips()

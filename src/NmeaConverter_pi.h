@@ -92,7 +92,7 @@ public:
     bool SaveConfig( void );
     bool LoadConfig( void );
     bool nmeaIsValid( wxString &sentence);
-    int AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode = ALLVAL, int RepTime = 1);
+    int AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode = ALLVAL, int RepTime = 1, bool Degr = false );
     void ClearAllObjectsInMap();
     wxString ComputeChecksum( wxString sentence );
     wxString ReadNmeaInputToken(wxString SentencePlusNumber);
@@ -127,6 +127,7 @@ public:
     void SetRepeatTime( int rtime);
     int GetRepeatTime(){ return RepeatTime;}
     NmeaConverter_pi* plugin;
+    bool UseDegrees;
 private:
     wxString FormatString;
     wxArrayString NeededVariables;
@@ -139,6 +140,7 @@ private:
     //wxTimer* m_timer;
     bool DlgActive;
     bool ValidFormatStr;
+    
     SentenceSendMode SendMode;
     int RepeatTime;
     localTimer* p_timer;
@@ -240,6 +242,7 @@ private:
 #define ID_TEXTCTRL 10004
 #define ID_BUTTON_OK1 10005
 #define ID_BUTTON_CANCEL 10006
+#define ID_CHECKBOXDEG 10008
 #define SYMBOL_NMEASENDOBJECTDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_NMEASENDOBJECTDLG_TITLE _("nmeaSendObjectDlg")
 #define SYMBOL_NMEASENDOBJECTDLG_IDNAME ID_NMEASENDOBJECT
@@ -273,9 +276,11 @@ public:
     void OnTextctrlTextUpdated( wxCommandEvent& event );
     void OnButtonOkClick( wxCommandEvent& event );
     void OnButtonCancelClick( wxCommandEvent& event );
+    void OnUseDegreesClick ( wxCommandEvent& event );
     wxBitmap GetBitmapResource( const wxString& name );
     wxIcon GetIconResource( const wxString& name );
     static bool ShowToolTips();
+    
     nmeaSendObj* SendObjOfThisDlg;
     wxSpinCtrl* itemSpinCtrl;
     wxRadioButton* itemRadioButtonVal;
@@ -284,6 +289,7 @@ public:
     wxTextCtrl* itemTextCtrlFormatStrCtr;
     wxButton* itemOKButton;
     wxButton* itemCancelButton;
+    wxCheckBox* itemCheckBoxUseDegrees;
 };
 
 
