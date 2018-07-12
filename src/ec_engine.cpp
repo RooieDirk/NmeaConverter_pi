@@ -175,8 +175,8 @@ void wxEcEngine::ResetConstants()
 {
     m_constants.clear();
     SetConstant(wxT("deg"), M_PI/180.0);
-    SetConstant(wxT("e"), exp(1.0));
-    SetConstant(wxT("g"), 9.80665);
+    //SetConstant(wxT("e"), exp(1.0));
+    //SetConstant(wxT("g"), 9.80665);
     SetConstant(wxT("pi"), M_PI);
     SetConstant(wxT("percent"), 0.01);
     return;
