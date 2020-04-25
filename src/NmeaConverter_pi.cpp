@@ -94,12 +94,15 @@ wxString NmeaConverter_pi::GetCommonName()
 
 wxString NmeaConverter_pi::GetShortDescription()
 {
-      return _("NmeaConverter_pi");
+      return _("Plugin for manipulating nmea sentences");
 }
 
 wxString NmeaConverter_pi::GetLongDescription()
 {
-      return _("NmeaConverter_pi.");
+      return _T("Plugin for manipulating nmea sentences.\n\
+Cherry picking from existing sentences, calculate new data with\n\
+spreadsheet like formulas or just plain send  new sentences.\n\
+Not easy, although it is easy to make errors and crash OpenCPN");
 
 }
 
@@ -338,7 +341,7 @@ wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxStri
     wxArrayString ReturnArray;
 
     {
-        while ( (FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND) &&( startpos < FormatStr.Length() ))
+        while ( (FormatStr.find( wxT("$"), startpos ) != (size_t)wxNOT_FOUND) &&( startpos < FormatStr.Length() ))
         {
             startpos = FormatStr.find( wxT("$"), startpos );
             size_t i = startpos;
@@ -435,7 +438,7 @@ void nmeaSendObj::ComputeOutputSentence()
         // find max number of decimals so we can set the output later to the right amount of needed decimals.
         size_t NoOfDecimals = 0;
         size_t NoOfDigits = 0;
-        int IinString = 0;
+        size_t IinString = 0;
         bool IsValidNumber= true;
         wxString s=formattokenarray[j];
         

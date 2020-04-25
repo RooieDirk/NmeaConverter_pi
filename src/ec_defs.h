@@ -578,10 +578,10 @@ enum
 
 //--------------- FUNCS --------------------
 
-static bool wxEcBetween(unsigned int value, unsigned int lowlimit, unsigned int highlimit)
-{
-    return ((lowlimit<=value) && (value<=highlimit));
-}
+// static bool wxEcBetween(unsigned int value, unsigned int lowlimit, unsigned int highlimit)
+// {
+//     return ((lowlimit<=value) && (value<=highlimit));
+// }
 
 //------------------------------------------
 
