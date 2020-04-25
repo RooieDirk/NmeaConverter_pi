@@ -30,7 +30,7 @@
 #include <wx/tokenzr.h>
 #include <algorithm>    // std::max
 #include "NmeaConverter_pi.h"
-
+#include "icons.h"
 
 extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr)
 {
@@ -40,6 +40,12 @@ extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr)
 extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 {
     delete p;
+}
+
+NmeaConverter_pi::NmeaConverter_pi(void *ppimgr):opencpn_plugin_18(ppimgr)
+{
+          // Create the PlugIn icons
+      initialize_images();
 }
 
 int NmeaConverter_pi::Init(void)
@@ -95,6 +101,11 @@ wxString NmeaConverter_pi::GetLongDescription()
 {
       return _("NmeaConverter_pi.");
 
+}
+
+wxBitmap *NmeaConverter_pi::GetPlugInBitmap()
+{
+      return _img_nmeaconverter_pi;
 }
 
 void NmeaConverter_pi::SetNMEASentence(wxString &sentence)

@@ -16,7 +16,7 @@ SET(TITLE_NAME NmeaConverter)
 SET(CPACK_PACKAGE_CONTACT "RooieDirk")
 
 SET(VERSION_MAJOR "1")
-SET(VERSION_MINOR "0")
+SET(VERSION_MINOR "2")
 
 #SET(CMAKE_BUILD_TYPE Debug)
 
@@ -35,6 +35,8 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/src)
 INCLUDE("cmake/PluginConfigure.cmake")
 
 SET(SRC_NMEATRANSLATOR
+        src/icons.h
+        src/icons.cpp
         src/NmeaConverter_pi.h
         src/NmeaConverter_pi.cpp
         src/ec_defs.h

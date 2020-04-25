@@ -71,7 +71,7 @@ class NmeaConverter_pi : public opencpn_plugin_18
     
 public:
     MapOfnmeaSendObj::iterator objit;
-    NmeaConverter_pi(void *ppimgr):opencpn_plugin_18(ppimgr){}
+    NmeaConverter_pi(void *ppimgr);
 
 //    The required PlugIn Methods
     int Init(void);
@@ -80,6 +80,7 @@ public:
     int GetAPIVersionMinor();
     int GetPlugInVersionMajor();
     int GetPlugInVersionMinor();
+    wxBitmap *GetPlugInBitmap();
     wxString GetCommonName();
     wxString GetShortDescription();
     wxString GetLongDescription();
