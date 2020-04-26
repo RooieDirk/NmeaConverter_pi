@@ -40,7 +40,7 @@ deploy:
   skip_cleanup: true
   on: # Set deploy conditions
       # Deploy only when tag is specified
-      tags: true
+      # tags: true
       # or his branch
       branch: master
       # and only when API token is set
