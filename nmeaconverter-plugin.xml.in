@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin version="2">
+  <name> Nmea_Converter </name>
+  <version> ${PACKAGE_VERSION} </version>
+  <release> ${PKG_RELEASE} </release>
+  <summary> OpenCPN plugin to manipulate nmea sentences </summary>
+
+  <api-version> ${PKG_API_VERSION} </api-version>
+  <open-source> yes </open-source>
+  <author> ${PKG_AUTHOR} </author>
+  <source> https://github.com/RooieDirk/NmeaConverter_pi </source>
+  <info-url>  </info-url>
+
+  <description>
+Plugin for manipulating nmea sentences.
+Cherry picking from existing sentences, calculate new data with
+spreadsheet like formulas or just plain send  new sentences.
+Not easy, although it is easy to make errors and crash OpenCPN
+  </description>
+
+  <target>${PKG_TARGET}</target>
+  <target-version>${PKG_TARGET_VERSION}</target-version>
+  <tarball-url> ${TARBALL_URL} </tarball-url>
+</plugin>
+

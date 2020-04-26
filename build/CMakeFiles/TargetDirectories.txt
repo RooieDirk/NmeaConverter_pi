@@ -1,0 +1,12 @@
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/install/strip.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/install/local.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/install.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/list_install_components.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/rebuild_cache.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/edit_cache.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/nmeaconverter_pi.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/nmeaconverter-pot-update.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/nmeaconverter-po-update.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/nmeaconverter-i18n.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/package.dir
+/home/dirk/Development/NmeaConverter_pi/build/CMakeFiles/package_source.dir
