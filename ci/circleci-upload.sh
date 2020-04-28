@@ -57,7 +57,7 @@ tarball_basename=${tarball##*/}
 source $HOME/project/build/pkg_version.sh
 test -n "$tag" && VERSION="$tag" || VERSION="${VERSION}.${commit}"
 test -n "$tag" && REPO="$STABLE_REPO" || REPO="$UNSTABLE_REPO"
-tarball_name=radar-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
+tarball_name=nmeaconverter-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
 
 sudo sed -i -e "s|@pkg_repo@|$REPO|"  $xml
 sudo sed -i -e "s|@name@|$tarball_name|" $xml
@@ -70,13 +70,13 @@ sudo chmod 666 $tarball
 repack $tarball metadata.xml
 
 cloudsmith push raw --republish --no-wait-for-sync \
-    --name radar-${PKG_TARGET}-${PKG_TARGET_VERSION}-metadata \
+    --name nmeaconverter-${PKG_TARGET}-${PKG_TARGET_VERSION}-metadata \
     --version ${VERSION} \
-    --summary "radar opencpn plugin metadata for automatic installation" \
+    --summary "nmeaconverter opencpn plugin metadata for automatic installation" \
     $REPO $xml
 
 cloudsmith push raw --republish --no-wait-for-sync \
     --name $tarball_name \
     --version ${VERSION} \
-    --summary "radar opencpn plugin tarball for automatic installation" \
+    --summary "nmeaconverter opencpn plugin tarball for automatic installation" \
     $REPO $tarball

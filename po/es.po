@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-24 09:18-0500\n"
+"POT-Creation-Date: 2020-04-28 19:58+0200\n"
 "PO-Revision-Date: 2015-04-24 11:15-0400\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Spanish\n"
@@ -15,65 +15,79 @@ msgstr ""
 "X-Crowdin-Project: opencpn\n"
 "X-Crowdin-Language: es-ES\n"
 "X-Crowdin-File: /plugins/NmeaConverter_pi/po/nmeaconverter_pi.pot\n"
-
-#: src/NmeaConverter_pi.cpp:89 src/NmeaConverter_pi.cpp:94
-msgid "NmeaConverter_pi"
+#
+msgid "#Error#"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:99
-msgid "NmeaConverter_pi."
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:133
-msgid "*"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:167
+#
 #, c-format
 msgid "%02X"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:499
+#
+msgid "&Cancel"
+msgstr ""
+#
+msgid "&OK"
+msgstr ""
+#
+msgid "*"
+msgstr ""
+#
+msgid ","
+msgstr ""
+#
+msgid "."
+msgstr ""
+#
+msgid "0"
+msgstr ""
+#
+msgid "0000000000"
+msgstr ""
+#
+msgid "0123456789."
+msgstr ""
+#
 msgid "Block incomming messages with wrong checksum"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:523
-msgid "New"
+#
+msgid "Calculate using degrees"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:526
-msgid "Edit"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:530
+#
 msgid "Delete"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:534 src/NmeaConverter_pi.cpp:710
+#
+msgid "Dlg already deleted:_)"
+msgstr ""
+#
+msgid "Edit"
+msgstr ""
+#
+msgid "New"
+msgstr ""
+#
+msgid "NmeaConverter_pi"
+msgstr ""
+#
 msgid "OK"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:696
-msgid "Send after update all variables"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:699
-msgid "Send every                    seconds"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:705
+#
 msgid "Output sentence comes here;-)"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:712
-msgid "Cancel"
+#
+msgid "Plugin for manipulating nmea sentences"
 msgstr ""
-
-#: src/NmeaConverter_pi.h:182
+#
 msgid "PreferenceDlg"
 msgstr ""
-
-#: src/NmeaConverter_pi.h:247
+#
+msgid "Send after update all variables"
+msgstr ""
+#
+msgid "Send every  "
+msgstr ""
+#
 msgid "nmeaSendObjectDlg"
 msgstr ""
-
+#
+msgid "seconds."
+msgstr ""

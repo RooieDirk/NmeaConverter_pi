@@ -1,4 +1,4 @@
-PLUGIN = org.opencpn.OpenCPN.Plugin.radar
+PLUGIN = org.opencpn.OpenCPN.Plugin.nmeaconverter
 
 all: build
 
