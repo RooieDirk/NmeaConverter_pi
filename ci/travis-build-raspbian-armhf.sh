@@ -20,15 +20,16 @@ docker run --privileged -d -ti -e "container=docker" \
       -v ~/source_top:/source_top \
       -v $(pwd):/ci-source:rw \
       $DOCKER_IMAGE /bin/bash
-      
-DOCKER_CONTAINER_ID=$(sudo docker ps | grep raspbian | awk '{print $1}')
 
+DOCKER_CONTAINER_ID=$(sudo docker ps | grep raspbian | awk '{print $1}')
 
 #echo $DOCKER_CONTAINER_ID 
 
+docker exec -ti $DOCKER_CONTAINER_ID apt-get update || \
 docker exec -ti $DOCKER_CONTAINER_ID apt-get update
 docker exec -ti $DOCKER_CONTAINER_ID echo "------\nEND apt-get update\n" 
 
+docker exec -ti $DOCKER_CONTAINER_ID apt-get -y install git cmake build-essential cmake gettext wx-common libwxgtk3.0-dev libbz2-dev libcurl4-openssl-dev libexpat1-dev libcairo2-dev libarchive-dev liblzma-dev libexif-dev lsb-release || \
 docker exec -ti $DOCKER_CONTAINER_ID apt-get -y install git cmake build-essential cmake gettext wx-common libwxgtk3.0-dev libbz2-dev libcurl4-openssl-dev libexpat1-dev libcairo2-dev libarchive-dev liblzma-dev libexif-dev lsb-release 
 
 
@@ -42,7 +43,7 @@ docker exec -ti $DOCKER_CONTAINER_ID apt-get -y install git cmake build-essentia
 #    'mkdir source_top/build; cd source_top/build; cmake ..; make; make package;'
 
 docker exec -ti $DOCKER_CONTAINER_ID /bin/bash -c \
-    'mkdir ci-source/build; cd ci-source/build; cmake -DCMAKE_INSTALL_PREFIX=/usr ..; make; make package;'
+    'mkdir ci-source/build; cd ci-source/build; cmake ..; make; make package;'
  
 echo "Stopping"
 docker ps -a
@@ -53,8 +54,11 @@ sudo apt-get install python3-pip python3-setuptools
 
 #  Upload to cloudsmith
 
-UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'david-register/ocpn-plugins-unstable'}
-STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'david-register/ocpn-plugins-stable'}
+STABLE_REPO=${OCPN_STABLE_REPO}
+UNSTABLE_REPO=${OCPN_UNSTABLE_REPO}
+
+#UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'kees-verruijt/ocpn-plugins-unstable'}
+#STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'kees-verruijt/ocpn-plugins-stable'}
 
 echo "Check 0.5"
 echo $STABLE_REPO
@@ -131,7 +135,6 @@ echo "Check 4"
 #10
 
 cat ~/$xml
-#cat ~/xml.tmp
 
 #sudo gunzip $tarball
 #tarball_tar=$(ls *.tar)

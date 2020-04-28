@@ -1,10 +1,10 @@
-PLUGIN = org.opencpn.OpenCPN.Plugin.oesenc
+PLUGIN = org.opencpn.OpenCPN.Plugin.radar
 
 all: build
 
 build:
-	flatpak-builder --repo=repo --force-clean \
-	    app $(PLUGIN).yaml
+	flatpak-builder --force-clean app $(PLUGIN).yaml
+	flatpak build-export repo app master
 
 install:
 	flatpak install --user --reinstall -y $(CURDIR)/repo $(PLUGIN)

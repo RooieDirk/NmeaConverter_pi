@@ -1,15 +1,14 @@
-Source: oesenc-pi
+Source: opencpn-plugin-nmeaconverter
 Section: misc
-Priority: extra
-Maintainer: Dave Register <bdbcat@yahoo.com>
-Build-Depends: debhelper (>= 8.0.0), cmake, cdbs, libgtk2.0-dev, gettext, wx-common, libwxgtk3.0-dev, libglu1-mesa-dev, libgtk2.0-dev, wx3.0-headers, libsdl1.2debian, libcurl4-openssl-dev
-Standards-Version: 3.9.3
-Homepage: https://www.opencpn.org
-#Vcs-Git: git://git.debian.org/collab-maint/opencpn.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/opencpn.git;a=summary
+Priority: optional
+Maintainer: Pavel Kalian <pavel@kalian.cz>
+Build-Depends: debhelper (>= 9), cmake, gettext, git-core, gpsd, gpsd-clients, libgps-dev, wx-common, libwxgtk3.0-dev, libglu1-mesa-dev, libgtk2.0-dev, wx3.0-headers, libbz2-dev, libtinyxml-dev, libportaudio2, portaudio19-dev, libcurl4-openssl-dev, libexpat1-dev, libcairo2-dev, libarchive-dev, liblzma-dev, libexif-dev, libelf-dev, libsqlite3-dev
+Standards-Version: 4.1.2
+Homepage: https://github.com/RooieDirk/NmeaConverter_pi
+#Vcs-Git: https://anonscm.debian.org/git/collab-maint/opencpn-plugin-radar.git
+#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/opencpn-plugin-radar.git
 
-Package: oesenc-pi
+Package: opencpn-plugin-nmeaconverter
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, wx3.0-i18n, opencpn (>= 4.1.0)
-Description: Plugin for OpenCPN
- OpenCPN is a free software (GPLv2) project to create a concise chartplotter and navigation software for use as an underway or planning tool.  OpenCPN is developed by a team of active sailors using real world conditions for program testing and refinement.
+Depends: ${misc:Depends}, ${shlibs:Depends}, opencpn (>= 4.99.0)
+Description: OpenCPN plugin for manipulatin nmea sentences
