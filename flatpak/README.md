@@ -1,34 +1,20 @@
-Oesenc flatpak README
----------------------
+radar plugin flatpak README
+---------------------------
 
-This is the flatpak packaging of the oesenc plugin, to be managed
-by opencpn's new plugin installer.
-
-
-Testing
--------
-  - The plugin requires extended permissions. Do (initial setup):
-
-      $ flatpak override --user --allow=devel
+This is a simple packaging to use the radar plugin when using the opencpn's
+flatpak package. To build and install:
 
   - Install flatpak and flatpak-builder as described in https://flatpak.org/
-  - Enable the flathub repo and install platform packages:
-     
-      $  flatpak --user remote-add --if-not-exists \
-            flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-      $ flatpak --user install org.freedesktop.Platform//18.08
-      $ flatpak --user install org.freedesktop.Sdk//18.08
-      $ flatpak --user install org.flatpak.Builder
+  - Install the opencpn flatpak package. Using the provisionary repo at
+    fedorapeople.org do:
 
-  - Install opencpn from the beta testing repo:
+      $ flatpak install --user \
+          https://opencpn.duckdns.org/opencpn/opencpn.flatpakref
 
-      $ flatpak --user remote-add --no-gpg-verify plug-mgr \
-           http://opencpn.duckdns.org/opencpn-beta/website/repo
-      $ flatpak --user install plug-mgr org.opencpn.OpenCPN
+  - The radar plugin can now be built and installed using
 
-  - Build plugin tarball and metadata from the ci branch:
+      $ make
+      $ make install
 
-      $ cd build
-      $ cmake -DOCPN_FLATPAK=ON ..
-      $ make flatpak-build
-      $ make package
+The actual version built depends on the *tag:* stanza in the yaml file;
+update to other versions as preferred.
