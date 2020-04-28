@@ -14,8 +14,8 @@
 
 set -xe
 
-STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'kees-verruijt/ocpn-plugins-stable'}
-UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'kees-verruijt/ocpn-plugins-unstable'}
+STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'dirk-smits/ocpn-plugins-stable'}
+UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'dirk-smits/ocpn-plugins-unstable'}
 
 source $HOME/project/ci/commons.sh
 
