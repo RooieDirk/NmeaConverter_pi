@@ -15,65 +15,49 @@ msgstr ""
 "X-Crowdin-Project: opencpn\n"
 "X-Crowdin-Language: de\n"
 "X-Crowdin-File: /plugins/NmeaConverter_pi/po/nmeaconverter_pi.pot\n"
-
-#: src/NmeaConverter_pi.cpp:89 src/NmeaConverter_pi.cpp:94
-msgid "NmeaConverter_pi"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:99
-msgid "NmeaConverter_pi."
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:133
-msgid "*"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:167
+#
 #, c-format
 msgid "%02X"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:499
+#
+msgid "*"
+msgstr ""
+#
 msgid "Block incomming messages with wrong checksum"
 msgstr ""
-
-#: src/NmeaConverter_pi.cpp:523
-msgid "New"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:526
-msgid "Edit"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:530
-msgid "Delete"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:534 src/NmeaConverter_pi.cpp:710
-msgid "OK"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:696
-msgid "Send after update all variables"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:699
-msgid "Send every                    seconds"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:705
-msgid "Output sentence comes here;-)"
-msgstr ""
-
-#: src/NmeaConverter_pi.cpp:712
+#
 msgid "Cancel"
 msgstr ""
-
-#: src/NmeaConverter_pi.h:182
+#
+msgid "Delete"
+msgstr ""
+#
+msgid "Edit"
+msgstr ""
+#
+msgid "New"
+msgstr ""
+#
+msgid "NmeaConverter_pi"
+msgstr ""
+#
+msgid "NmeaConverter_pi."
+msgstr ""
+#
+msgid "OK"
+msgstr ""
+#
+msgid "Output sentence comes here;-)"
+msgstr ""
+#
 msgid "PreferenceDlg"
 msgstr ""
-
-#: src/NmeaConverter_pi.h:247
+#
+msgid "Send after update all variables"
+msgstr ""
+#
+msgid "Send every                    seconds"
+msgstr ""
+#
 msgid "nmeaSendObjectDlg"
 msgstr ""
-

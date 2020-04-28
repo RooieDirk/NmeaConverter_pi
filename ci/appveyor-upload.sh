@@ -40,7 +40,7 @@ tarball_basename=${tarball##*/}
 source ../build/pkg_version.sh
 test -n "$tag" && VERSION="$tag" || VERSION="${VERSION}.${commit}"
 test -n "$tag" && REPO="$STABLE_REPO" || REPO="$UNSTABLE_REPO"
-tarball_name=radar-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
+tarball_name=nmeaconverter-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
 
 # There is no sed available in git bash. This is nasty, but seems
 # to work:
@@ -57,13 +57,13 @@ cp $xml metadata.xml
 repack $tarball metadata.xml
 
 cloudsmith push raw --republish --no-wait-for-sync \
-    --name radar-${PKG_TARGET}-${PKG_TARGET_VERSION}-metadata \
+    --name nmeaconverter-${PKG_TARGET}-${PKG_TARGET_VERSION}-metadata \
     --version ${VERSION} \
-    --summary "radar opencpn plugin metadata for automatic installation" \
+    --summary "nmeaconverter opencpn plugin metadata for automatic installation" \
     $REPO $xml
 
 cloudsmith push raw --republish --no-wait-for-sync \
     --name $tarball_name  \
     --version ${VERSION} \
-    --summary "radar opencpn plugin tarball for automatic installation" \
+    --summary "nmeaconverter opencpn plugin tarball for automatic installation" \
     $REPO $tarball

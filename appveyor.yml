@@ -1,4 +1,4 @@
-clone_folder: c:\project\opencpn\radar_pi
+clone_folder: c:\project\opencpn\nmeaconverter_pi
 shallow_clone: false
 clone_depth: 10
 
@@ -39,7 +39,7 @@ install:
   #- cmd: nmake -f makefile.vc BUILD=debug SHARED=1 CFLAGS=/D_USING_V120_SDK71_ CXXFLAGS=/D_USING_V120_SDK71_
 
 before_build:
-  - cd c:\project\opencpn\radar_pi
+  - cd c:\project\opencpn\nmeaconverter_pi
   - mkdir build
   - cd build
 #  - ps: Start-FileDownload http://opencpn.navnux.org/build_deps/OpenCPN_buildwin-4.99a.7z

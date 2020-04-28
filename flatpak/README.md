@@ -1,7 +1,7 @@
-radar plugin flatpak README
+nmeaconverter plugin flatpak README
 ---------------------------
 
-This is a simple packaging to use the radar plugin when using the opencpn's
+This is a simple packaging to use the nmeaconverter plugin when using the opencpn's
 flatpak package. To build and install:
 
   - Install flatpak and flatpak-builder as described in https://flatpak.org/
@@ -11,7 +11,7 @@ flatpak package. To build and install:
       $ flatpak install --user \
           https://opencpn.duckdns.org/opencpn/opencpn.flatpakref
 
-  - The radar plugin can now be built and installed using
+  - The nmeaconverter plugin can now be built and installed using
 
       $ make
       $ make install
