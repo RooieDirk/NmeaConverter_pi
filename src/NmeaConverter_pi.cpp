@@ -484,8 +484,8 @@ void nmeaSendObj::ComputeOutputSentence()
             if ( (calc.GetLastError() == wxECE_NOERROR) & IsValidNumber )
             {
                  formattokenarray[j] = result;
-            }else
-                formattokenarray[j] = _("#Error#");
+            }//else
+             //   formattokenarray[j] = _("#Error#");
         }
     }
     // finaly glue the seperate tokens back to one sentence
