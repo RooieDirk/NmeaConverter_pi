@@ -5,7 +5,7 @@ matrix:
   include:
   - env:
     - OCPN_TARGET=stretch-armhf
-    - OCPN_BRANCH=master
+    - OCPN_BRANCH=ci
     - OCPN_STABLE_REPO=dirk-smits/ocpn-plugins-stable
     - OCPN_UNSTABLE_REPO=dirk-smits/ocpn-plugins-unstable
     - DOCKER_IMAGE=raspbian/stretch
@@ -15,7 +15,7 @@ matrix:
     - "./ci/travis-build-raspbian-armhf.sh"
   - env:
     - OCPN_TARGET=buster-armhf
-    - OCPN_BRANCH=master
+    - OCPN_BRANCH=ci
     - DOCKER_IMAGE=opencpn/raspbian-buster:plugin_build_tooling
     services:
     - docker
@@ -23,7 +23,7 @@ matrix:
     - "./ci/travis-build-raspbian-armhf.sh"
   - env:
     - OCPN_TARGET=bionic-arm64
-    - OCPN_BRANCH=master
+    - OCPN_BRANCH=ci
     - DOCKER_IMAGE=arm64v8/ubuntu:18.04
     services:
     - docker
