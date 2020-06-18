@@ -104,32 +104,32 @@ workflows:
       - build-buster:
           filters:
             branches:
-              only: ci
+              only: master
       - build-xenial:
           filters:
             branches:
-              only: ci
+              only: master
       - build-bionic:
           filters:
             branches:
-              only: ci
+              only: master
       - build-focal:
           filters:
             branches:
-              only: ci
+              only: master
       - build-flatpak:
           filters:
             branches:
-              only: ci
+              only: master
       - build-fedora:
           filters:
             branches:
-              only: ci
+              only: master
       - build-macos:
           filters:
             branches:
-              only: ci
+              only: master
       - build-mingw:
           filters:
             branches:
-              only: ci
+              only: master
