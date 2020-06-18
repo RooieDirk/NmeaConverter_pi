@@ -54,8 +54,8 @@ sudo apt-get install python3-pip python3-setuptools
 
 #  Upload to cloudsmith
 
-UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'david-register/ocpn-plugins-unstable'}
-STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'david-register/ocpn-plugins-stable'}
+UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'dirk-smits/ocpn-plugins-unstable'}
+STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'dirk-smits/ocpn-plugins-stable'}
 
 echo "Check 0.5"
 echo $STABLE_REPO
