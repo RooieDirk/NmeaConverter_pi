@@ -159,4 +159,4 @@ cloudsmith push raw --republish --no-wait-for-sync \
     --version ${VERSION} \
     --summary "opencpn plugin tarball for automatic installation" \
     $REPO $tarball
-
+cd ..
