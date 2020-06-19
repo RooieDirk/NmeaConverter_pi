@@ -1,13 +1,13 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: opencpn-plugin-nmeaconverter
-Source: https://github.com/RooieDirk/NmeaConverter_pi
+Upstream-Name: opencpn-plugin-draw
+Source: https://github.com/jongough/ocpn_draw_pi
 
 Files: *
-Copyright: 2015-2022 Dirk Smits
+Copyright: 2019 Jon Gough <jon.gough@eclipsesystems.com.au>
 License: GPL-2.0+
 
 Files: debian/*
-Copyright: 2019 Pavel Kalian <pavel@kalian.cz>
+Copyright: 2019 Jon Gough <jon.gough@eclipsesystems.com.au>
 License: GPL-2.0+
 
 License: GPL-2.0+

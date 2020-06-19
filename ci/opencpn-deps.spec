@@ -62,5 +62,5 @@ Use dnf builddep opencpn-deps.spec to install the dependencies.
 
 
 %changelog
-* Fri Mar 01 2019 Alec Leamas <leamas.alec@gmail.com> - 0.1-1
+* Fri Mar 15 2020 - 0.1
 - Initial release

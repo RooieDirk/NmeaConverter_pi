@@ -2,19 +2,23 @@
 cd $(dirname $(readlink -fn $0))
 
 #
-# Actually build the mingw artifacts inside the Fedora container
+# Actually build the Travis flatpak artifacts inside the Fedora container
 #
 set -xe
 
+df -h
 cd $TOPDIR
-
-su -c "dnf install -q -y sudo cmake gcc-c++ flatpak-builder flatpak make tar"
+su -c "dnf install -y sudo cmake gcc-c++ flatpak-builder flatpak make tar"
 flatpak remote-add --user --if-not-exists flathub \
     https://flathub.org/repo/flathub.flatpakrepo
-flatpak install --user  -y \
-        http://opencpn.duckdns.org/opencpn/opencpn.flatpakref  >/dev/null
-flatpak install --user -y  flathub org.freedesktop.Sdk//18.08  >/dev/null
+ocpnfound=$(flatpak list | grep org.opencpn.OpenCPN | awk '{print $1}')
+if [ "" = "$ocpnfound" ]; then
+   flatpak install --user  -y \
+       http://opencpn.duckdns.org/opencpn/opencpn.flatpakref
+fi
+flatpak install --user -y  flathub org.freedesktop.Sdk//18.08
+#rm -rf flatpak/.flatpak-builder && rm -rf build && mkdir build && cd build
 rm -rf build && mkdir build && cd build
-cmake -DOCPN_FLATPAK=ON ..
+cmake -DOCPN_FLATPAK_CONFIG=ON ..
 make flatpak-build
-make package
+make flatpak-pkg
