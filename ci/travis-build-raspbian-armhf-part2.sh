@@ -8,7 +8,8 @@
 set -xe
 
 DOCKER_CONTAINER_ID=$(sudo docker ps | grep $BUILD_ENV | awk '{print $1}')
-
+echo
+echo "travis-build......-part2.sh"
 echo $TRAVIS_BRANCH
 echo $OCPN_TARGET
 

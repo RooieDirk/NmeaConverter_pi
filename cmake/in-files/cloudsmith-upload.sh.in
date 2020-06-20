@@ -206,6 +206,11 @@ pwd
 ls -la
 
 if [ $LOCAL_BUILD = false ]; then
+    echo "cloudsmith push raw --republish --no-wait-for-sync \
+        --name "@PACKAGE_NAME@-@PACKAGE_VERSION@-@PKG_TARGET@-@ARCH@-@PKG_TARGET_VERSION@-${OCPN_TARGET}"-metadata \
+        --version "${VERSION} "\
+        --summary "@PACKAGE@ "opencpn plugin metadata for automatic installation" \
+        $REPO $xml
     cloudsmith push raw --republish --no-wait-for-sync \
         --name @PACKAGE_NAME@-@PACKAGE_VERSION@-@PKG_TARGET@-@ARCH@-@PKG_TARGET_VERSION@-${OCPN_TARGET}-metadata \
         --version ${VERSION} \
