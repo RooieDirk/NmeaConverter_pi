@@ -17,7 +17,7 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 set(VERBOSE_NAME "nmeaconverter")
-set(COMMON_NAME "nmeaconverter_pi")
+set(COMMON_NAME "NmeaConverter_pi")
 set(TITLE_NAME "OCPNNMEACONVERTER")
 set(PACKAGE_CONTACT "RooieDirk")
 set(PACKAGE "nmeaconverter_pi")
