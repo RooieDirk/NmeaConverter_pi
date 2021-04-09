@@ -1,0 +1,924 @@
+== NMEAconverter
+
+image::plugins.png[]
+
+=== Links
+
+* Source: https://github.com/RooieDirk/NmeaConverter_pi
+* Release:
+https://github.com/RooieDirk/NmeaConverter_pi/releases[RooieDirk Release
+TAB]
+* Download: https://opencpn.org/OpenCPN/plugins/nmeaconvert.html[Website
+Download]
+* Forum:
+http://www.cruisersforum.com/forums/f134/new-plugin-nmeaconvertor-145073.html
+
+image::nmeacon.jpg[]
+
+=== Outline
+
+. link:nmea_converter.html#getting_started[Getting Started]
+. link:nmea_converter.html#first_test[First Test]
+. link:nmea_converter.html#use_incoming_data_to_send_a_different_nmea_sentence[Use
+incoming data to send a different NMEA sentence]
+. link:nmea_converter.html#do_math_-_convert_units_eg_centigrade_to_fahrenheit[Do
+Math - Convert Units, e.g. Centigrade to Fahrenheit]
+. link:nmea_converter.html#force_true_heading_to_cog[getting_startedForce
+True Heading to COG]
+. link:nmea_converter.html#calculate_true_wind_from_apparent_wind[Calculate
+True Wind from Apparent Wind]
+. link:nmea_converter.html#normalize_degrees_to_less_than_360[Normalize
+Degrees to less than 360]
+. link:nmea_converter.html#prepare_barometer_sensor_output_for_dashboard[Prepare
+Barometer Sensor Output for Dashboard]
+. link:nmea_converter.html#fix_incorrect_st60_wind_speed_data[Fix
+incorrect ST60 Wind Speed Data]
+. link:nmea_converter.html#wildcards_example_-change_engine_data_format[Wildcards
+Example - Change Engine Data Format]
+. link:nmea_converter.html#getting_startedconvert_temperature_c_to_fahrenheit_-_opencpnopencpn_user_manualpluginslogsnmea_converter_fix_bad_heading_checksum[Fix
+bad Heading Checksum]
+. link:nmea_converter.html#change_validity_character_-_nmea_converter_with_sailaway_game_simulator[Change
+Validity Character - NMEA Converter with the SailAway Game/Simulator]
+
+NMEAconverter is a utility that can parse incoming NMEA sentences/data,
+adjust and/or make calculations with the data, and then output a new
+NMEA sentence to have that adjusted data appear in OpenCPN. Examples
+include calculating true wind speed/angle from apparent wind data and
+boat speed information, changing units (degrees C to F or vice-versa,
+knots to km, etc.), or correcting malformed sentences created by some
+equipment where the sentence would otherwise be ignored by OpenCPN or
+displayed improperly.
+
+Please note that there is no Toolbar Icon. NmeaConverter works from the
+Preferences button of the plug-in. Options|Plug-ins|NMEAConvertor –>
+Preferences
+
+To use the plugin a basic understanding of NMEA sentences is required.
+Please see the link:../../advanced_features/nmea_sentences.html[NMEA
+Sentences Page] for details on NMEA sentences and the fields each
+sentence contains. The basics of an NMEA sentence are:
+
+* Initial delimiter (usually $, sometimes !)
+* Talker ID (the instrument sending the data, two characters, optional)
+* Sentence name - three characters
+* Data, in fields, comma separated
+* End delimiter - *
+* Checksum
+* Carriage Return+Linefeed
+
+Example $GPRMB,field1,field2,…field15*<0xChecksum><0x0D><0x0A>
+
+[source,code]
+----
+                                                            14
+        1 2   3 4    5    6       7 8        9 10  11  12  13|
+        |   |   |   |    |   |       |   |        |   |   |   |   |   |
+ $IDRMB,A,x.x,a,c--c,c--c,llll.ll,a,yyyyy.yy,a,x.x,x.x,x.x,A,m*hh<CR><LF>
+----
+
+The basic format of a conversion command is:
+
+[source,code]
+----
+NewSentence, Argument for Field 1, Argument for Field 2, ...Argument for field n
+----
+
+NewSentence = $IDYYY where ID is a talker ID you would like to use to
+denote sentences from the converter. The examples in this manual
+generally use XX as the talker ID for newly created sentences. YYY is
+the NMEA sentence identifier you would like to send. A simple conversion
+example - this sample takes the 5th and 6th fields of an MDA sentence
+and transmits a new MTA sentence:
+
+[source,code]
+----
+$XXMTA, $WIMDA5, $WIMDA6
+----
+
+Arguments can take the form of constants (numeric or text), values from
+an incoming NMEA sentence, or calculations using either or both
+constants and incoming data. In the simplest form an argument is an
+incoming NMEA sentence and field number - $GPRMC4 will get the fourth
+value in any RMC sentence received by OpenCPN from talker GP. Use the
+link:../../advanced_features/nmea_sentences.html[NMEA Sentences Page] to
+figure out what sentence you want to send, what data fields are
+required, and how the fields are configured. You must build a complete
+version of the sentence you want to send, and put the right data/fields
+from the original source in the right places for the converter to work
+properly. A number of detailed examples are provided below for
+reference.
+
+When inserting argument fields the wildcard “?” can be used to tell the
+converter to use data with any content where the “?” appears. The
+wildcard “??” at the front of an argument will tell the converter to use
+data from any talker sending the requested sentence (e.g. $??HDG3 will
+retrieve the third field from any HDG sentence regardless of sender). Be
+careful when using wildcards and the talker ID, especially when
+correcting malformed sentences. If you create a conversion that outputs
+the same sentence as any field used in the input (e.g. $XXHDG,
+$??HDG3,…..) you will create a loop that will crash the plugin (and
+OpenCPN). Every time the plugin evaluates it will see its own creation,
+because of the wildcard it will reevaluate, …
+
+Once a conversion is defined you can select whether to send the
+calculated sentence on a fixed timing (every x seconds) or only when the
+incoming data is updated.
+
+You do not need to add the end delimiter (*) or the checksum in your
+converter definitions - the converter will calculate the checksum and
+add the delimiter and checksum automatically.
+
+Depending on the data you are manipulating you may want to go into the
+link:../../options_setting/connections.html[OpenCPN Connections Tab] and
+tell OpenCPN to ignore the original data. If you are making unit
+conversions, for instance, and do not ignore the original data you will
+end up with a display that flashes between the original value and the
+converted value. Setting the data to ignore will not affect the
+converter, the data will still be received there, it simply prevents the
+display of the data in OpenCPN.
+
+For Reference from the
+link:../../advanced_features/nmea_sentences.html[NMEA Sentences Page],
+sentences that can be displayed in OpenCPN include:
+
+* DBT - Depth Below Transducer
+* DPT - Depth of Water
+* GGA - Global Positioning System Fix Data
+* GLL - Geographic Position - Latitude/Longitude HDG Heading - Deviation
+& Variation
+* HDM - Heading - Magnetic
+* HDT - Heading - True
+* MTA - Air Temperature (obsolete)
+* MDA - Meteorological Composite (obsolete) Use XDR transducer instead.
+* MTW - Mean Temperature of Water
+* VLW - Distance Traveled through Water
+* MWD - Wind Direction & Speed
+* MWV - Wind Speed and Angle
+* RMC - Recommended Minimum Navigation Information
+* RSA - Rudder Sensor Angle
+* VHW - Water speed and heading
+* VTG - Track made good and Ground speed
+* VWR - Relative Wind Speed and Angle
+* VWT - True Windspeed and Angle (obsolete)
+* XDR - Transducer Values
+* ZDA -Time & Date - UTC, day, month, year and local time zone
+* AIVDO - Automatic Information System (AIS) position reports from own
+vessel
+
+=== 1. Getting Started
+
+Install the plugin in accordance with the
+link:../install_and_enable.html[Plugin Installation Instructions].
+
+Then open the Preferences Dialog to set up your conversions.
+
+image::nmea-converter.png[]
+
+If you see something like above please enlarge the nmeaSendObjectDlg
+window so it displays the “OK” and “Cancel” buttons.
+
+=== 2. First Test
+
+image::testmessage1.png[]
+
+This is a completely useless sentence that is sent every second to
+OpenCPN. Check also the NMEAdebug window in the picture above, and note
+that a checksum is added to the sentence. It is easy to change this one
+into something like:
+
+[source,code]
+----
+$GPRMC,085437,A,5324.3052,N,00611.5704,E,3.3,68.9,070614,0.3,E,A
+----
+
+Just enter this line into the NMEAConverter > Preference > New > Edit
+box and Save it. No VDR file is needed. That will fake a GPS position
+into OpenCPN, but still not very useful.
+
+=== 3. Use incoming data to send a different NMEA sentence
+
+The real power of this plugin is that you can change the data of the
+sent sentence by cherry picking from incoming sentences. The reason I
+wrote this plugin was I wanted Dashboard to show the air temperature. To
+get the data, Dashboard needs an $xxMTA sentence, however I had a Airmar
+PB200 unit that is sending $xxMDA sentences.
+
+An example: We have from the windset,
+
+MDA- Meteorological (Obsolete)
+
+[source,code]
+----
+$WIMDA,30.1,I,1.0,B,11.3,C,,,,,,,18.6,T,18.5,M,5.8,N,3.0,M*27
+----
+
+and want: MDA- Air temperature
+
+[source,code]
+----
+$xxMTA,11.3,C*<Checksum>
+----
+
+Note that the data needed is in fields 5 and 6 of the MDA sentence.
+(11.3 degrees Celsius)
+
+Setting the format to
+
+[source,code]
+----
+$XXMTA, $WIMDA5, $WIMDA6
+----
+
+will give an output sentence:
+
+[source,code]
+----
+$XXMTA, 11.3, C*26
+----
+
+Where *$WIMDA5* is replaced by the 5th field of the $WIMDA sentence.
+etc.
+
+image::xxmtamessage2.png[]
+
+As seen above, the $XXMTA sentence is sent each time a $WIMDA sentence
+is received and read by Dashboard.
+
+For testing use VDR_pi or VDRplayer and run
+
+link:../../../files/nmea/wimda_ocmda.zip[WIMDA+OCMDA.txt from this zip]
+
+=== 4. Do Math - Convert Units, e.g. Centigrade to Fahrenheit
+
+But what if I was living in the US and preferred the reading to be in
+degrees Fahrenheit? Just change the format to:
+
+[source,code]
+----
+$XXMTA, 9/5*$WIMDA5 + 32, F
+----
+
+image::xxmtamessage3.png[image::xxmtamessage3.png[image,width=641,height=366]]
+
+The value is recalculated and displayed as degrees Fahrenheit.
+
+Use the same file for testing use VDR_pi or VDRplayer and run
+link:../../../files/nmea/wimda_ocmda.zip[WIMDA+OCMDA.txt from this zip]
+
+=== 5. Force True Heading to COG
+
+In NMEAconverter create a HDG (compass) sentence from your COG. Possible
+use when the autopilot is old and does not receive heading (true or
+magnetic).
+
+Note: Since computation of the drift and surface current requires HDG,
+it is understood that while using Tactics_pi value for Current speed and
+direction will not be useful. All you will see is the speed difference
+between SOG and STW, which would force Current to be the vector
+component normal to the keel. That means the “current” display will
+always be directly from bow or stern, in other words the component of
+the current along the centerline of the boat, assuming your STW(speed
+through water) is calibrated correctly.
+
+See
+http://www.cruisersforum.com/forums/f134/tactics-plugin-166909-36.html#post2140937[CF
+Tactics_pi Post #22].
+
+image::aufnahme37.jpeg[]
+
+The NMEA file being run by VDR_pi is
+
+link:../../../files/nmea/vdr2_-_copie.xls[vdr2 - copie.xls]
+
+Tactics_pi and in particular, NMEAconverter_pi is using
+
+[source,code]
+----
+$XXHDT,$IIVTG1,$IIVTG2
+----
+
+Remember that setting HDT to COG will give you no drift angle at all
+(except maybe a small portion via the manual heel input), so you will
+not see any real current I suggest to set a fixed heel angle to 0 (see
+screenshot above), to avoid side effects with manual heel input at very
+low speeds and small speed differences between SOG and STW.
+
+=== 6. Calculate True Wind from Apparent Wind
+
+==== Known
+
+Boat Speed ground (kts) = SOG +
+Apparent wind speed (degrees) = AWS +
+Apparent wind angle (degrees) = AWA
+
+==== MWV - Wind Speed and Angle - Input
+
+[source,code]
+----
+$–MWV,x.x,a,x.x,a*hh<CR><LF>
+----
+
+Field Number:
+
+. Wind Angle, 0 to 360 degrees
+. Reference, R = Relative, T = True
+. Wind Speed
+. Wind Speed Units, K/M/N
+. Status, A = Data Valid
+. Checksum
+
+==== RMA - Recommended Minimum Navigation Information - Input
+
+[source,code]
+----
+$–RMA,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,x.x,x.x,x.x,a*hh<CR><LF>
+----
+
+Field Number:
+
+. Blink Warning
+. Latitude
+. N or S
+. Longitude
+. E or W
+. Time Difference A, uS
+. Time Difference B, uS
+. Speed Over Ground, Knots
+. Track Made Good, degrees true
+. Magnetic Variation, degrees
+. E or W
+. Checksum
+
+==== MWV - Wind Speed and Angle - Output TW in Knots
+
+[source,code]
+----
+$–MWV,x.x,T,x.x,K*hh<CR><LF>
+----
+
+Field Number:
+
+. Wind Angle, 0 to 360 degrees
+. Reference, R = Relative, T = True
+. Wind Speed
+. Wind Speed Units, K/M/N
+. Status, A = Data Valid
+. Checksum
+
+NMEA 0183 from http://www.catb.org/gpsd/NMEA.html
+
+==== Calculations Needed:
+
+x =AWS*sin(AWA*3.14159265/180) +
+y =(x/tan(AWA*3.14159265/180)) - SOG +
+TWS (True Wind Speed) =x/sin(TWA*3.14159265/180) +
+TWA (True Wind Angle) =atan(x/y)*180/3.14159265 +
+*Formula from http://www.bethandevans.com/calculators.htm +
+
+The formula now needs to be completed: +
+*$XXMWV,*
+
+==== TWS and TWA
+
+(From zzz, see
+http://www.cruisersforum.com/forums/f134/new-plugin-nmeaconvertor-145073.html#post2533127[zzz's
+Cruiser Forum Post]
+
+[source,code]
+----
+$XXMWV,$WIMWV1+acos((sqr($WIMWV3)+sqr($GPRMC7)+sqr($WIMWV3)-2*$GPRMC7*$WIMWV3*cos($WIMWV1*3.14159265/180)-sqr($GPRMC7))/(2*sqrt(sqr($GPRMC7)+sqr($WIMWV3)-2*$GPRMC7*cos($WIMWV1*3.14159265/180))*$WIMWV3)),T,sqrt(sqr($GPRMC7)+SQR($WIMWV3)-2*$GPRMC7*$WIMWV3*cos($WIMWV1*3.14159265/180)),N,A
+----
+
+. $s were missing in the previous version
+. Changed wind speed unit from K to N
+. Deleted spaces after commas.
+. In terms of sog vs. stw, as pointed out, in most cases, diff is
+negligible I believe.
+. One thing about stw is that the sensor cannot capture the movement of
+a vessel due to tide (as high as 5 knots!).
+. For my purpose, gps is good enough.
+
+==== Observations by Rhythm Doctor:
+
+One needs to be careful with this calculation. There are at least two
+different syntaxes for the reporting of relative wind angle. The older
+VWR and VWT sentences for relative and true wind are not recommended for
+new devices, but there are many older devices and SeaTalk converters
+that still use them (specifically, my own instruments). The sentences
+look like this (with II talker ID in this example):
+
+[source,code]
+----
+$IIVWR,084.0,R,10.4,N,5.4,M,19.3,K
+$IIVWT,084.0,R,10.4,N,5.4,M,19.3,K
+----
+
+_1 084.0 Wind Angle 0 - 180 +
+2 R Right of vessel heading (L = Left) +
+3 10.4 Wind Speed +
+4 N Wind Speed units Knots +
+5 5.4 Wind Speed +
+6 M Wind Speed units Metres per second +
+7 19.3 Wind Speed +
+9 K Wind Speed units Km/Hr_
+
+Newer devices use the preferred MWV sentence structure that looks like
+this (with II talker ID in this case):
+
+[source,code]
+----
+$IIMWV,084.0,R,10.4,N,A
+$IIMWV,084.0,T,10.4,N,A
+----
+
+_1 084.0 Wind Angle 0 - 359 +
+2 R Relative (T = True) +
+3 10.4 Wind Speed +
+4 N Wind Speed units Knots (K = KPH, M = MPH) +
+5 A Status (A= Valid)_
+
+Note that VWR/VWT and MWV work totally differently: VWR provides wind
+angles from 0-180 with an additional parameter of L or R, while MWV
+provides wind angles from 0-359 with no L or R. Converting your obsolete
+VWR sentence to the more modern MWV sentence would seem to be impossible
+without a conditional if() statement, which appears to not be supported
+(since I was unable to get it to work).
+
+Here is the sentence that works best for me for converting VWR
+(relative/apparent wind) to VWT (true wind). Using the wildcard (instead
+of II, GP, or WI sender IDs) allows testing with others' VWR sentences,
+including Paul Elliot's test NMEA files:
+
+[source,code]
+----
+$XXVWT,90-deg(atan(($??VWR3*cos(rad($??VWR1))-$??RMC7)/$??VWR3*sin(rad($??VWR1)))),$??VWR2,sqrt(sqr($??VWR3*sin(rad($??VWR1)))+sqr($??VWR3*cos(rad($??VWR1))-$??RMC7)),$??VWR4,,,,
+----
+
+Note that there is an invisible <return> character at the end of this
+sentence (after the four commas). In my testing, things don't work right
+without it. I recommend that you include it if you copy/paste this
+formula into the config dialog.
+
+==== Transmitter Dan advises:
+
+It is possible to replace the sender ID (GP or WI) with ?? which means
+any sender ID will be accepted. Using the wildcard will allow Paul
+Elliot's test NMEA file to work with the NMEAconverter formula, using
+Seatalk - vYacht dialect:
+
+[source,code]
+----
+$XXMWV,90-deg(atan(($??MWV3*cos(rad($??MWV1))-$GPRMC7)/$??MWV3*sin(rad($??MWV1)))),T,sqrt(sqr($??MWV3*sin (rad($??MWV1)))+sqr($??MWV3*cos(rad($??MWV1))-$GPRMC7)),N,A
+----
+
+Edit: In above formula's 3.14159265 might be replaced by “pi”, and
+3.14159265/180 can also be written as “deg”.
+
+http://www.navmonpc.com/downloads.html[Paul Elliot's Test Files]
+
+=== 7. Normalize Degrees to less than 360
+
+==== For True Wind Direction (TWD) = Sum between True Wind Angle (MWV) and True Heading (HDT)
+
+image::nmeaconverter-greater-than-360-crop.png[]
+
+==== Math Basis
+
+https://stackoverflow.com/questions/1628386/normalise-orientation-between-0-and-360[Normalize
+orientation between 0 and 360]
+
+Formula for re-orienting circular values i.e to keep angle between 0 and
+359 is:
+
+[source,code]
+----
+angle + Math.ceil( -angle / 360 ) * 360
+----
+
+Generalized formula for shifting angle orientation can be:
+
+[source,code]
+----
+angle + Math.ceil( (-angle+shift) / 360 ) * 360
+----
+
+in which value of shift represent circular shift for e.g I want values
+in -179 to 180 then it can be represented as:
+
+[source,code]
+----
+angle + Math.ceil( (-angle-179) / 360 ) * 360
+----
+
+What is math.ceil? Java script function.
+
+The
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil[Math.ceil()]
+function returns the smallest integer greater than or equal to a given
+number. Note: Math.ceil(null) returns integer 0 and does not give a NaN
+error.
+
+NMEAConverter has this comparable function:
+
+[source,code]
+----
+ceil : the smallest integer greater than or equal to x
+----
+
+Homebrew MOD function:
+
+[source,code]
+----
+=( Angle /360-INT( Angle /360))*360
+----
+
+image::nemaconverter-normalize-degrees-crop.png.detail.html[]
+
+==== Implementation
+
+All data comes from Raymarine instrument with NMEA 0183. Here the two
+data values to have in OpenCPN:
+
+* True Heading
+* True Wind Direction 0-359
+
+[source,code]
+----
+$XXHDT,$??HDG1,T
+$WIMWD,($??MWV1+$??HDT1)+ceil((-($??MWV1+$??HDT1))/360)*360,T,,M,$??MWV3,N,,M
+----
+
+Max reports that it works well. - Thank you Max.
+
+The formula to normalize the degrees to be between 0-360 is
+
+[source,code]
+----
+ceil((-($??MWV1+$??HDT1))/360)*360
+----
+
+=== 8. Prepare Barometer Sensor Output for Dashboard
+
+==== Aim
+
+The BMP180 pressure sensor output from Raspberry Pi/OpenPlotter uses the
+sentence $OSXDR. This cannot be read by Dashboard. BMP180 Output Units
+are Bars i.e 1000 times the reading needed for display -
+mBar/hectoPascal. Any error in the output cannot be corrected. This
+formula creates an $xxMDA (deprecated) or $xxXDR sentence that can be
+used by Dashboard.
+
+==== Conversion
+
+[source,code]
+----
+$MYXDR,P, 0.018 + 1/1000 * $OSXDR2,B,Barometer
+----
+
+Deprecated:
+
+[source,code]
+----
+$MYMDA, , ,0.018 +1/1000*$OSXDR2,,B,,,,,,,,,,,,,,,,M
+----
+
+(0.018 is an error correction and also adjusts the barometer pressure
+for a sea level reading)
+
+==== Applying the settings
+
+Found it necessary to tick the 'block incoming messages with wrong
+checksum' box when editing the sentence.
+
+image::block_incomming.png[image:../../../dev/plugins/beta_plugins/plugins_under_development/block_incomming.png[image,width=400]]
+
+When editing the sentence; starting a variable with '.' or '$' causes
+OpenCPN to freeze. Variables are being read by the plugin all the time
+and these characters are not recognized. Workaround is to type '0.' and
+then the number. Also 'OSXDR2' and then add the '$' in front, '$OSXDR2'.
+
+image::osxdr_variables.png[]
+
+image::virtual_mda.png[]
+
+=== 9. Fix incorrect ST60 Wind Speed Data
+
+Ratsea has fixed an incorrect Raymarine ST60 conversion.
+
+==== Problem
+
+Dashboard displays incorrect wind speed data when using the ST60 Multi
+NMEA Output. The data is treated as Km/hr as it has the K unit
+identifier and is converted to knots/m per sec/Km/hr as per the
+Dashboard settings, it then incorrect as the data is already in Knots
+
+==== Aim
+
+Change the display units in the wind output sentence from ST60 Multi
+from K (kms/hr) to N (kts) as the Raymarine instrument incorrectly uses
+the K identifier for Knots and not the N, so that the Dashboard
+correctly displays the Wind Speed data in the units selected.
+
+==== Process
+
+Using the NMEA converter, apply the conversion to the MWV sentence with
+a new ID - xx:
+
+[source,code]
+----
+$xxMWV,$IIMWV1,$IIMWV2,$IIMWV3,N,$IIMWV5
+----
+
+and tick 'Send after update all variable' With the instrument switched
+on and receiving the actual live data shows in Blue.
+
+image::nmea-con-st60.jpeg[]
+
+The NMEA datastream then becomes:
+
+[source,code]
+----
+$IIHDM,143,M*3A
+$IIMTW,025.2,C*26
+$IIMWV,155,R,009.0,K,A*2E Input
+$xxMWV,155,R,9.0,N,A*2B Corrected, the input line is also shown on the dashboard, but too quickly to notice
+$IIVHW,,T,143,M,00.00,N,00.00,K*63
+----
+
+==== Caution
+
+Whilst developing this code, I found that using the formula:
+
+[source,code]
+----
+$IIMWV,$IIMWV1,$IIMWV2,$IIMWV3,N,$IIMWV5
+----
+
+would also work if the 'Send every (n) seconds' was ticked, but the
+Dashboard would flash between the two values of Km/sec and knots. If the
+Send after update all… was ticked, then OpenCPN would freeze in a
+continuous loop trying to update the newly created NMEA sentence!
+
+=== 10. Use Wildcards
+
+Now it is possible to use wildcards in the identifiers. So you could
+make it talkerid independent by using something similar to
+
+[source,code]
+----
+.....$??XXX3....
+----
+
+and whatever character on the ? position will cause a hit.
+
+Even more important, you might use it for special transducers sending
+the something like
+
+[source,code]
+----
+$OWXDR,H,....or $OWXDR,C....
+----
+
+sentence.
+
+Note that field 1 is part of the identifier. As the comma is the NMEA
+separator, you can not use it as an identifier string, but by using a
+wildcard it works.
+
+For example
+
+[source,code]
+----
+ ....$OWXDR?H2... or $??XDR?H2....
+----
+
+will work.
+https://www.cruisersforum.com/forums/f134/new-plugin-nmeaconvertor-145073.html#post3218765[Cruiser
+Forum Post]
+
+=== 10. Wildcards Example: Change Engine data format
+
+Using wildcards is also useful when the data to be matched is in the
+data payload rather than the header. In the example below, we have
+engine data coming from the NMEA stream which contains the correct
+sender transducer ID, however is not the format required by the Engine
+Dashboard plug-in. Here is the original NMEA sentences:
+
+{empty}[code] _Engine RPM $ERRPM,E,0,2324.00,,A*69_ Oil Pressure,
+Coolant Temp, and Engine Hours
+$ERXDR,P,4.04,B,ENGOILP0,C,75.25,C,ENGTEMP0,G,2024 .1,,ENGHRS0*01
+_Battery0 (Starter) Voltage and Shunt Current
+$ERXDR,U,13.75,V,BATVOLT0,I,0.8,A,BATCURR0*4D_ Battery1 (House) Voltage
+$ERXDR,U,13.27,V,BATVOLT1*14 [/code]
+
+You can see that the two battery voltages are distinguished using
+different transducer IDs, BATVOLT0 and BATVOLT1
+
+The following NMEA Converter plug-in code converts to sentences so that
+the Engine Dashboard can read them. For the sentence that contains
+multiple data elements, we can us the wildcard “$ERXDR?P2” to match on
+the particular sentence that has the data we need.
+
+To get battery voltage and current, we need to make liberal use of the
+wildcard to match out to the “I” in order to distinguish from the
+BATVOLT1 sentence. this gets us the battery0 voltage and the DC shunt
+current.
+
+For battery1, I have not figured out how to convert this because the
+only character that distinguishes it from battery0 is the “1” at the
+end.
+
+{empty}[code] RPM $IIXDR,T,$ERRPM3,R,MAIN ENGINE OIL PRESSURE
+$IIXDR,P,$ERXDR?P2*100000,P,MAIN ENGINE COOLANT TEMP
+$IIXDR,C,$ERXDR?P6,C,MAIN ENGINE HOURS $IIXDR,G,$ERXDR?P10,H,MAIN HOUSE
+BATTERY VOLTAGE $IIXDR,U,$ERXDR?U??????????????????I2,V,HOUS DC AMPERAGE
+$IIXDR,U,$ERXDR?U??????????????????I6,A,STRT [/code]
+
+See this
+https://www.cruisersforum.com/forums/f134/new-plugin-nmeaconvertor-145073.html#post3241791[CF
+#341 Post] and ones preceding.
+
+=== 11. Convert Temperature C to Fahrenheit
+
+Using convert C to F for temp ( $XXMTA, 9/5*$AIMTW5 + 32, F) with send
+after all updates variables checked.
+
+* As soon as I start to playback a NMEA stream via VDR plugin or
+VDRplayer.py OpenCPN crashes. A look at the O logs does not produce any
+clues.
+* As a side note I have compiled and used the Tactics plugin with the
+same NMEA file with VDRplayer and O and Tactics run just fine.
+
+You are using an ..MTW sentence. Format according my info:
+
+* MTW - Mean Temperature of Water
+
+$–MTW,x.x,C_hh
+
+* This sentence has only 2 fields available, the first one given the
+temp value and the second just 'C' for 'Celsius'.
+* In your command sentence ($XXMTA, 9/5_$AIMTW5 + 32, F) )
+* You are requesting the 5th field of the MTW sentence, but that field
+does not exist. Try again with
+
+[source,code]
+----
+ $XXMTA, 9/5*$AIMTW1 + 32, F
+----
+
+Used new formula provided above.. Still Crashed. I removed the
+
+$Dummy
+
+entry that came with NMEAConverter_pi install. OpenCPN no longer crashes
+with NMEAConverter_pi enabled with a NMEA stream present..and as
+provided for above
+
+[source,code]
+----
+$XXMTA, 9/5*$AIMTW1 + 32, F
+----
+
+is showing the “Air Temp” in F in Dashboard on O. “I can never thank the
+volunteers enough for all these wonderful tools.”
+
+=== 12. Fix bad Heading Checksum
+
+http://www.cruisersforum.com/forums/f134/heading-info-not-being-accepted-used-225665.html#post3004204[Cruiser
+Forum Post]
+
+The problem with the incoming sentence:
+
+[source,code]
+----
+$APHDM, 113,M*0A
+----
+
+Which in this case, is a magnetic heading of 113 degrees followed by a
+bad checksum.
+
+Using the NMEA converter sentence, to delete the bad checksum and then
+add a new checksum after a forced comma,
+
+[source,code]
+----
+$IIHDM, $APHDM1", "
+----
+
+Which gets converted to a new sentence of $IIHDM,113, *50 with a new
+checksum. This assigns the first field of the NMEA sentence from $APHDM
+(113) to a new virtual source of $IIHDM
+
+image::correct_head.jpeg[]
+
+Tim advises:
+
+* As you can see, I now have a heading indicator plus dashboard data.
+The NMEA debug window shows the data coming in and being converted.
+* I'm sure that I should tweak the conversion command to put M in for
+magnetic, plus tidy up commas and stuff (as per Hakan suggestion), but
+it is working well, so I am reluctant to “fix” it further just at the
+moment…
+
+Dsanduril reports: “The TMQ checksum includes the '$' delimiter
+character at the start of the sentence. Per NMEA standard the '$'
+delimiter at the start of the sentence and the '*' delimiter at the end
+of the sentence should not be included in the checksum. Checksum should
+be calculated by XOR of all characters between the delimiters.
+[Suggesting that the TMQ AP needs a firmware update to correct the
+error.”
+
+From the Nmea Standard:
+
+[source,code]
+----
+> The checksum is the 8-bit exclusive OR (no start or stop bits) of all characters in the sentence, including "," and "^" delimiters, between but not including the "$" or "!" and the "*" delimiters[emphasis added]. The hexadecimal value of the most significant and least significant 4 bits of the result is converted to two ASCII characters (0-9, A-F (upper case)) for transmission. The most significant character is transmitted first.
+----
+
+=== 13. Change Validity Character - NMEA Converter with the SailAway Game/Simulator
+
+The game SailAway sends realtime NMEA streams that can be used with
+plotter software, routing software, etc. The game developers have
+elected to send the RMC and GLL sentences with the “V” validity
+character, which indicates the data is invalid. OpenCPN rejects the
+data. An “A” character is required to show the data is valid.
+
+[source,code]
+----
+$GPGLL,2546.261,N,7959.8522,W,174650.217,V*3B<0x0D><0x0A>
+$GPRMC,174650.217,V,2546.261,N,7959.8522,W,4.9,79,230320,,,*0D<0x0D><0x0A>
+----
+
+NMEAconverter can easily adjust these sentences and recalculate the
+checksum so that the data is accepted in OpenCPN.
+
+[source,code]
+----
+$XXRMC,$GPRMC1,A,$GPRMC3,$GPRMC4,$GPRMC5,$GPRMC6,$ GPRMC7,$GPRMC8,$GPRMC9,,,
+$XXGLL,$GPGLL1,$GPGLL2,$GPGLL3,$GPGLL4,$GPGLL5,A
+----
+
+Thanks to Jurien72 and Rasbats
+https://www.cruisersforum.com/forums/f134/sog-cog-problem-231924.html#post3101987[CForum
+SOG/COG Problem]
+
+=== 14. Contribute your Formulas & Conversions
+
+If you have an useful format formula please feel free to add it here.
+
+Another future possibility is to do a comparison lookup of a boat's
+Polar data and send a special NMEA sentence of the comparative result to
+the Dashboard using a special dedicated performance instrument, for
+example.
+
+=== Calculations Supported
+
+For calculations the following functions are supported:
+
+==== Normal functions
+
+abs : the absolute value, it removes the sign +
+ceil : the smallest integer greater than or equal to x +
+cub : x^3, safe way to compute such an exponent +
+deg : converts from radian to degree +
+exp : the exponential value +
+hvi : Heaviside's function, =0 if x<0, =1 if x>=0 +
+int : the largest integer less than or equal to x +
+inv : inverts, 1/x +
+floor : not supported, see int +
+ln : the Napierian\natural logarithm +
+lnep : see ln +
+log : the logarithm base 10 +
+rad : converts from degree to radian +
+sgn : the sign, -1 or +1. Zero returns +1. +
+sqr : x^2, safe way to compute such an exponent +
+sqrt : the root square +
+pi : 3.14159265 +
+deg : 3.14159265/180
+
+==== Trigonometric functions
+
+acos : the secant (inverse of cosine) +
+acsh : the inverse of the hyperbolic cosine +
+asin : the cosecant (inverse of sine) +
+asnh : the inverse of the hyperbolic sine +
+atan : the cotangent (inverse of tangent) +
+atnh : the inverse of the hyperbolic tangent +
+cos : the cosine +
+cosh : the hyperbolic cosine +
+sin : the sine +
+sinc : the cardinal sine (radian) +
+sinh : the hyperbolic sine +
+tan : the tangent +
+tanh : the hyperbolic tangent
+
+This makes it possible to do spreadsheet-like calculations. And as in a
+spreadsheet the trigonometric functions use radians.
+
+In beta at this moment:
+
+* An extra checkbox to allow for calculation in degrees instead of
+radians.
+* “E” bug is fixed.
+* “pi” instead of 3.14159265
+* “deg” instead of 3.14159265/180
