@@ -17,8 +17,7 @@
 set -xe
 
 PROD_REPO=${CLOUDSMITH_PROD_REPO:-'@CLOUDSMITH_USER@/@CLOUDSMITH_BASE_REPOSITORY@-@PROD@'}
-BETA_REPO=${CLOUDSMITH_BETA_REPO:-'dirk-smits/ocpn-plugins-unstable'}
-# BETA_REPO=${CLOUDSMITH_BETA_REPO:-'@CLOUDSMITH_USER@/@CLOUDSMITH_BASE_REPOSITORY@-@BETA@'}
+BETA_REPO=${CLOUDSMITH_BETA_REPO:-'@CLOUDSMITH_USER@/@CLOUDSMITH_BASE_REPOSITORY@-@BETA@'}
 ALPHA_REPO=${CLOUDSMITH_ALPHA_REPO:-'@CLOUDSMITH_USER@/@CLOUDSMITH_BASE_REPOSITORY@-@ALPHA@'}
 
 LOCAL_BUILD=false
@@ -34,6 +33,10 @@ elif [ "$TRAVIS" ]; then
     BUILD_DIR=$TRAVIS_BUILD_DIR/build
     BUILD_BRANCH=$TRAVIS_BRANCH
     BUILD_TAG=$TRAVIS_TAG
+    if [ "$BUILD_BRANCH" = "$BUILD_TAG" ]; then
+        # Travis makes BUILD_BRANCH = BUILD_TAG so make BUILD_BRANCH ""
+        BUILD_BRANCH=""
+    fi
     PKG_EXT=${CLOUDSMITH_PKG_EXT:-'deb'}
 elif [ "$APPVEYOR" ]; then
     BUILD_ID=${APPVEYOR_BUILD_NUMBER:-1}
@@ -58,36 +61,38 @@ fi
 set -x
 
 if [ "$CIRCLECI" ] || [ "$TRAVIS" ]; then
-    if pyenv versions 2>&1 >/dev/null; then
-        pyenv versions
-        if ! pyenv global 3.7.1 2>&1 >/dev/null; then
-            if ! pyenv global 3.7.0 2>&1>/dev/null; then
-                pyenv global 3.5.2
+    if [ ! "$DEPLOY_USE_ORB" ]; then
+        if pyenv versions 2>&1 >/dev/null; then
+            pyenv versions
+            if ! pyenv global 3.8.6 2>&1 >/dev/null; then
+                if ! pyenv global 3.7.1 2>&1 >/dev/null; then
+                    if ! pyenv global 3.7.0 2>&1>/dev/null; then
+                        pyenv global 3.5.2
+                    fi
+                fi
             fi
+            python3 -m pip install cloudsmith-cli
+            pyenv rehash
+        elif dnf --version 2>&1 >/dev/null; then
+            sudo dnf -y install python3-pip python3-setuptools
+            sudo python3 -m pip install -q cloudsmith-cli
+        elif apt-get --version 2>&1 >/dev/null; then
+            COUNTER=0
+            until
+                sudo apt-get install python3-pip python3-setuptools
+            do
+                if [ "$COUNTER" -gt  "20" ]; then
+                    exit -1
+                fi
+                sleep 5
+                ((COUNTER++))
+            done
+            sudo python3 -m pip install -q cloudsmith-cli
+    #    else
+    #        sudo -H python3 -m ensurepip
+    #        sudo -H python3 -m pip install -q setuptools
+    #        sudo -H python3 -m pip install -q cloudsmith-cli
         fi
-       #pyenv global 3.7.1
-        python3 -m pip install --upgrade pip
-        python3 -m pip install -q cloudsmith-cli
-        pyenv rehash
-    elif dnf --version 2>&1 >/dev/null; then
-        sudo dnf install python3-pip python3-setuptools
-        sudo python3 -m pip install -q cloudsmith-cli
-    elif apt-get --version 2>&1 >/dev/null; then
-        COUNTER=0
-        until
-            sudo apt-get install python3-pip python3-setuptools
-        do
-            if [ "$COUNTER" -gt  "20" ]; then
-                exit -1
-            fi
-            sleep 5
-            ((COUNTER++))
-        done
-        sudo python3 -m pip install -q cloudsmith-cli
-    else
-        sudo -H python3 -m ensurepip
-        sudo -H python3 -m pip install -q setuptools
-        sudo -H python3 -m pip install -q cloudsmith-cli
     fi
 fi
 
@@ -126,7 +131,7 @@ fi
 if [ "$BUILD_BRANCH" = "" ]; then
     build_commit=$(git show -s --format=%d $BUILD_TAG)
     is_master=$(echo $build_commit | awk '/\/master/ {print}')
-    if [ "$is_master" != "" ]; then
+    if [ "$is_master" != "" ] || [ "$TRAVIS" ]; then
         BUILD_BRANCH="master"
     fi
 fi
@@ -155,11 +160,8 @@ else
         REPO="$ALPHA_REPO"
     fi
 fi
-
-echo 
 echo $VERSION
 echo $REPO
-echo
 
 if [ "$APPVEYOR" ] || [ LOCAL_BUILD=true ]; then
     echo 'substituting xml file variables for windows build'
@@ -182,7 +184,7 @@ cat $xml
 ls -l $BUILD_DIR
 cur_dir=$(pwd)
 gunzip -f $tarball
-cd $BUILD_DIR
+cd "$BUILD_DIR"
 rm -f metadata.xml
 tarball_tar=$(ls *.tar)
 xml_here=$(ls *.xml)
@@ -193,6 +195,7 @@ if [ "$TRAVIS" ] || [ "$CIRCLECI" ]; then
     cd build_tar
     tar -xf $tarball_tar
     rm *.tar
+    rm -rf root
     cp ../metadata.xml .
     tar -cf build_tarfile.tar *
     tar -tf build_tarfile.tar
@@ -205,16 +208,11 @@ else
 fi
 tar -tf $tarball_tar
 gzip -f $tarball_tar
-cd $cur_dir
+cd "$cur_dir"
 pwd
 ls -la
 
 if [ $LOCAL_BUILD = false ]; then
-    echo "cloudsmith push raw --republish --no-wait-for-sync \
-        --name "@PACKAGE_NAME@-@PACKAGE_VERSION@-@PKG_TARGET@-@ARCH@-@PKG_TARGET_VERSION@-${OCPN_TARGET}"-metadata \
-        --version "${VERSION} "\
-        --summary "@PACKAGE@ "opencpn plugin metadata for automatic installation" \
-        $REPO $xml
     cloudsmith push raw --republish --no-wait-for-sync \
         --name @PACKAGE_NAME@-@PACKAGE_VERSION@-@PKG_TARGET@-@ARCH@-@PKG_TARGET_VERSION@-${OCPN_TARGET}-metadata \
         --version ${VERSION} \

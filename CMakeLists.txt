@@ -24,28 +24,32 @@ set(PACKAGE "nmeaconverter_pi")
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "2")
-set(VERSION_PATCH "0")
+set(VERSION_PATCH "4")
 set(VERSION_TWEAK "2")
-set(VERSION_DATE "19/06/2020")
+set(VERSION_DATE "29/04/2021")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
-message(STATUS "${CMLOC}PI Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK}")
-message(STATUS "${CMLOC}OCPN API Verson: ${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR}")
-message(STATUS "${CMLOC}OCPN Min Verson: ${OCPN_MIN_VERSION}")
+set(TP_COMMENT "  * Release for O5 using CI")
 
 set(PARENT "opencpn")
 
 # The next line allows for setting up your own local webserver with git on it for testing purposes, the default is github.com
-set(GIT_REPOSITORY_SERVER "github.com")
+#set(GIT_REPOSITORY_SERVER "github.com")
 
-# Builds repository sufficies
-set(PROD "prod") # Standard Repos
-set(BETA "beta") # Standard Repos
-set(ALPHA "alpha") # Standard Repos
+# Specifies cloudsmith repository sufficies
+set(PROD "prod")    # Standard Repos
+set(BETA "beta")    # Standard Repos
+set(ALPHA "alpha")  # Standard Repos
 
-set(CLOUDSMITH_USER "dirk-smits")
+# set this if your cloudsmith repository name does not match your git repository name
+#set(CLOUDSMITH_BASE_REPOSITORY "testplugin_pi")
+set(CLOUDSMITH_BASE_REPOSITORY "nmeaconverter")
+# Set the following to use OpenCPN cloudsmith repositories instead of own repositories
+set(CLOUDSMITH_USER "opencpn")
+#set(CLOUDSMITH_USER "jon-gough")
+#set(CLOUDSMITH_USER "dirk-smits")
 # set this if your cloudsmith repository name does not match your git repository name set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/nmeaconvert.html")
 set(XML_SUMMARY "Plugin to change and cherrypich from other NMEA sentences")
@@ -59,7 +63,7 @@ set(XML_DESCRIPTION "NmeaConverter is a plugin where you can manipulate or add n
 # ----- Modify section below if there are special requirements for the plugin ----- ##
 #
 
-option(PLUGIN_USE_SVG "Use SVG graphics" ON)
+#option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
 set(CMAKE_CXX_STANDARD 11)
 
