@@ -439,34 +439,25 @@ void nmeaSendObj::ComputeOutputSentence()
         size_t NoOfDecimals = 0;
         size_t NoOfDigits = 0;
         size_t IinString = 0;
-        bool IsValidNumber= true;
         wxString s=formattokenarray[j];
         
         while (IinString < s.Length()){
             // Go to start of begin number
-            while ( _("0123456789.").find( s[IinString] ) == (size_t)wxNOT_FOUND )
-                if(IinString < s.Length()) IinString++; else break;
-            
+            while ( ( _("0123456789.").find( s[IinString] ) == (size_t)wxNOT_FOUND ) &
+                  (IinString < s.Length()) )
+                IinString++;            
             wxString temp_s;
-            while ( _("0123456789.").find( s[IinString] ) != (size_t)wxNOT_FOUND ){             
-                if(IinString < s.Length()){
-                    temp_s.Append(s[IinString]);
-                    IinString++;                
-                }
-                    else break;
-            }  // temp_s contains now one number
-            if ( temp_s.find( _(".") ) != (size_t)wxNOT_FOUND ){ // floatingpoint number
-                double value;
-                if(!temp_s.ToDouble(&value)){ IsValidNumber = false; }
-                NoOfDecimals = std::max(NoOfDecimals, temp_s.Length()-temp_s.find( _(".") ) - 1 );
-                if ( (temp_s.Left(1) == _("0")) & (temp_s.find( _(".")) > 1) )
-                    NoOfDigits = std::max( NoOfDigits,  temp_s.find( _(".") ) );
-            } else{ //integer no
-                long value;
-                if(!temp_s.ToLong(&value)) { IsValidNumber = false; }
-                if ( temp_s.Left(1) == _("0") )
-                    NoOfDigits = std::max( NoOfDigits,  temp_s.Length() );
-            }
+            while ( ( _("0123456789.").find( s[IinString] ) != (size_t)wxNOT_FOUND ) &
+                  (IinString < s.Length()) ){             
+                temp_s.Append(s[IinString]);
+                IinString++;
+            }  // temp_s contains now one number (as string)
+            
+            if ( temp_s.find( _(".") ) == (size_t)wxNOT_FOUND )
+                temp_s.Append(_(".")); // add a decimal char is none there
+            NoOfDecimals = std::max( NoOfDecimals,  temp_s.Length() - temp_s.find( _(".") ) -1 );
+            if ( (temp_s.Left(1) == _("0")) & (temp_s.find( _(".")) > 1) )
+                NoOfDigits = std::max( NoOfDigits,  temp_s.find( _(".") ) -1 );
         }    
         
         wxString result;
@@ -476,16 +467,14 @@ void nmeaSendObj::ComputeOutputSentence()
         {
             result = wxString::Format(wxT("%.*f"), NoOfDecimals, calc.Compute() );
             if (NoOfDigits){
-                printf("NoOfDigits = %d\n", (int)NoOfDigits);
                 wxString t(_("0000000000") );
                 t.Append(result);
                 result = t.Right(NoOfDecimals + 1 + NoOfDigits);
             }
-            if ( (calc.GetLastError() == wxECE_NOERROR) & IsValidNumber )
+            if ( (calc.GetLastError() == wxECE_NOERROR) ) //& IsValidNumber )
             {
                  formattokenarray[j] = result;
-            }//else
-             //   formattokenarray[j] = _("#Error#");
+            }
         }
     }
     // finaly glue the seperate tokens back to one sentence
