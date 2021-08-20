@@ -5,8 +5,8 @@ site:
 
 content:
   sources:
-    - url: ../..
-      start_path: manual/nmea_converter
+    - url: ..
+      start_path: manual
       branches: HEAD
       edit_url: https://github.com/opencpn-manuals/NmeaConverter_pi/edit/master/{path}
 
