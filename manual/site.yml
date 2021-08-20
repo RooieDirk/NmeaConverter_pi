@@ -1,7 +1,7 @@
 site:
   title: NmeaConverter Plugin Manual
   url:  https://nowhere.net
-  start_page: nmea_converter:ROOT:nmea_converter.adoc
+  start_page: nmea_converter:ROOT:index.adoc
 
 content:
   sources:

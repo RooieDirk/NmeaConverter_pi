@@ -1,4 +1,3 @@
 name: nmea_converter
-title: nmea_converter
+title: NMEA Converter
 version: '0.1'
-start_page: ROOT:nmea_converter.adoc 
