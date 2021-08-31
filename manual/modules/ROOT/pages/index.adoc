@@ -1,8 +1,8 @@
-== NMEAconverter
+= NMEAconverter
 
 image::plugins.png[]
 
-=== Links
+== Links
 
 * Source: https://github.com/RooieDirk/NmeaConverter_pi
 * Release:
@@ -133,7 +133,7 @@ sentences that can be displayed in OpenCPN include:
 * AIVDO - Automatic Information System (AIS) position reports from own
 vessel
 
-=== 1. Getting Started
+== 1. Getting Started
 
 Install the plugin in accordance with the User Manual. (Install and enable plugins)
 
@@ -144,7 +144,7 @@ image::nmea-converter.png[]
 If you see something like above please enlarge the nmeaSendObjectDlg
 window so it displays the “OK” and “Cancel” buttons.
 
-=== 2. First Test
+== 2. First Test
 
 image::testmessage1.png[]
 
@@ -161,7 +161,7 @@ Just enter this line into the NMEAConverter > Preference > New > Edit
 box and Save it. No VDR file is needed. That will fake a GPS position
 into OpenCPN, but still not very useful.
 
-=== 3. Use incoming data to send a different NMEA sentence
+== 3. Use incoming data to send a different NMEA sentence
 
 The real power of this plugin is that you can change the data of the
 sent sentence by cherry picking from incoming sentences. The reason I
@@ -209,7 +209,7 @@ is received and read by Dashboard.
 For testing use VDR_pi or VDRplayer and run WIMDA+OCMDA.txt from 
 link:{attachmentsdir}/wimda_ocmda.zip[this zip].
 
-=== 4. Do Math - Convert Units, e.g. Centigrade to Fahrenheit
+== 4. Do Math - Convert Units, e.g. Centigrade to Fahrenheit
 
 But what if I was living in the US and preferred the reading to be in
 degrees Fahrenheit? Just change the format to:
@@ -225,7 +225,7 @@ The value is recalculated and displayed as degrees Fahrenheit.
 Use the same file for testing use VDR_pi or VDRplayer and run WIMDA+OCMDA.txt from 
 link:{attachmentsdir}/wimda_ocmda.zip[this zip]
 
-=== 5. Force True Heading to COG
+== 5. Force True Heading to COG
 
 In NMEAconverter create a HDG (compass) sentence from your COG. Possible
 use when the autopilot is old and does not receive heading (true or
@@ -260,15 +260,15 @@ not see any real current I suggest to set a fixed heel angle to 0 (see
 screenshot above), to avoid side effects with manual heel input at very
 low speeds and small speed differences between SOG and STW.
 
-=== 6. Calculate True Wind from Apparent Wind
+== 6. Calculate True Wind from Apparent Wind
 
-==== Known
+=== Known
 
 Boat Speed ground (kts) = SOG
 Apparent wind speed (degrees) = AWS
 Apparent wind angle (degrees) = AWA
 
-==== MWV - Wind Speed and Angle - Input
+=== MWV - Wind Speed and Angle - Input
 
 ----
 $–MWV,x.x,a,x.x,a*hh<CR><LF>
@@ -283,7 +283,7 @@ Field Number:
 . Status, A = Data Valid
 . Checksum
 
-==== RMA - Recommended Minimum Navigation Information - Input
+=== RMA - Recommended Minimum Navigation Information - Input
 
 ----
 $–RMA,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,x.x,x.x,x.x,a*hh<CR><LF>
@@ -304,7 +304,7 @@ Field Number:
 . E or W
 . Checksum
 
-==== MWV - Wind Speed and Angle - Output TW in Knots
+=== MWV - Wind Speed and Angle - Output TW in Knots
 
 ----
 $–MWV,x.x,T,x.x,K*hh<CR><LF>
@@ -321,7 +321,7 @@ Field Number:
 
 NMEA 0183 from http://www.catb.org/gpsd/NMEA.html
 
-==== Calculations Needed:
+=== Calculations Needed:
 
 x =AWS*sin(AWA*3.14159265/180)
 y =(x/tan(AWA*3.14159265/180)) - SOG
@@ -332,7 +332,7 @@ TWA (True Wind Angle) =atan(x/y)*180/3.14159265
 The formula now needs to be completed:
 *$XXMWV,*
 
-==== TWS and TWA
+=== TWS and TWA
 
 (From zzz, see
 http://www.cruisersforum.com/forums/f134/new-plugin-nmeaconvertor-145073.html#post2533127[zzz's
@@ -351,7 +351,7 @@ negligible I believe.
 a vessel due to tide (as high as 5 knots!).
 . For my purpose, gps is good enough.
 
-==== Observations by Rhythm Doctor:
+=== Observations by Rhythm Doctor:
 
 One needs to be careful with this calculation. There are at least two
 different syntaxes for the reporting of relative wind angle. The older
@@ -409,7 +409,7 @@ sentence (after the four commas). In my testing, things don't work right
 without it. I recommend that you include it if you copy/paste this
 formula into the config dialog.
 
-==== Transmitter Dan advises:
+=== Transmitter Dan advises:
 
 It is possible to replace the sender ID (GP or WI) with ?? which means
 any sender ID will be accepted. Using the wildcard will allow Paul
@@ -425,13 +425,13 @@ Edit: In above formula's 3.14159265 might be replaced by “pi”, and
 
 http://www.navmonpc.com/downloads.html
 
-=== 7. Normalize Degrees to less than 360
+== 7. Normalize Degrees to less than 360
 
-==== For True Wind Direction (TWD) = Sum between True Wind Angle (MWV) and True Heading (HDT)
+=== For True Wind Direction (TWD) = Sum between True Wind Angle (MWV) and True Heading (HDT)
 
 image::nmeaconverter-greater-than-360-crop.png[]
 
-==== Math Basis
+=== Math Basis
 
 https://stackoverflow.com/questions/1628386/normalise-orientation-between-0-and-360[Normalize
 orientation between 0 and 360]
@@ -478,7 +478,7 @@ Homebrew MOD function:
 
 image::nemaconverter-normalize-degrees-crop.png[]
 
-==== Implementation
+=== Implementation
 
 All data comes from Raymarine instrument with NMEA 0183. Here the two
 data values to have in OpenCPN:
@@ -499,9 +499,9 @@ The formula to normalize the degrees to be between 0-360 is
 ceil((-($??MWV1+$??HDT1))/360)*360
 ----
 
-=== 8. Prepare Barometer Sensor Output for Dashboard
+== 8. Prepare Barometer Sensor Output for Dashboard
 
-==== Aim
+=== Aim
 
 The BMP180 pressure sensor output from Raspberry Pi/OpenPlotter uses the
 sentence $OSXDR. This cannot be read by Dashboard. BMP180 Output Units
@@ -510,7 +510,7 @@ mBar/hectoPascal. Any error in the output cannot be corrected. This
 formula creates an $xxMDA (deprecated) or $xxXDR sentence that can be
 used by Dashboard.
 
-==== Conversion
+=== Conversion
 
 ----
 $MYXDR,P, 0.018 1/1000 * $OSXDR2,B,Barometer
@@ -525,7 +525,7 @@ $MYMDA, , ,0.0181/1000*$OSXDR2,,B,,,,,,,,,,,,,,,,M
 (0.018 is an error correction and also adjusts the barometer pressure
 for a sea level reading)
 
-==== Applying the settings
+=== Applying the settings
 
 Found it necessary to tick the 'block incoming messages with wrong
 checksum' box when editing the sentence.
@@ -541,25 +541,25 @@ image::osxdr_variables.png[]
 
 image::virtual_mda.png[]
 
-=== 9. Fix incorrect ST60 Wind Speed Data
+== 9. Fix incorrect ST60 Wind Speed Data
 
 Ratsea has fixed an incorrect Raymarine ST60 conversion.
 
-==== Problem
+=== Problem
 
 Dashboard displays incorrect wind speed data when using the ST60 Multi
 NMEA Output. The data is treated as Km/hr as it has the K unit
 identifier and is converted to knots/m per sec/Km/hr as per the
 Dashboard settings, it then incorrect as the data is already in Knots
 
-==== Aim
+=== Aim
 
 Change the display units in the wind output sentence from ST60 Multi
 from K (kms/hr) to N (kts) as the Raymarine instrument incorrectly uses
 the K identifier for Knots and not the N, so that the Dashboard
 correctly displays the Wind Speed data in the units selected.
 
-==== Process
+=== Process
 
 Using the NMEA converter, apply the conversion to the MWV sentence with
 a new ID - xx:
@@ -583,7 +583,7 @@ $xxMWV,155,R,9.0,N,A*2B Corrected, the input line is also shown on the dashboard
 $IIVHW,,T,143,M,00.00,N,00.00,K*63
 ----
 
-==== Caution
+=== Caution
 
 Whilst developing this code, I found that using the formula:
 
@@ -596,7 +596,7 @@ Dashboard would flash between the two values of Km/sec and knots. If the
 Send after update all… was ticked, then OpenCPN would freeze in a
 continuous loop trying to update the newly created NMEA sentence!
 
-=== 10. Use Wildcards
+== 10. Use Wildcards
 
 Now it is possible to use wildcards in the identifiers. So you could
 make it talkerid independent by using something similar to
@@ -629,7 +629,7 @@ For example
 will work.
 https://www.cruisersforum.com/forums/f134/new-plugin-nmeaconvertor-145073.html#post3218765[Cruiser Forum Post]
 
-=== 10. Wildcards Example: Change Engine data format
+== 10. Wildcards Example: Change Engine data format
 
 Using wildcards is also useful when the data to be matched is in the
 data payload rather than the header. In the example below, we have
@@ -670,7 +670,7 @@ $IIXDR,U,$ERXDR?U??????????????????I6,A,STRT [/code]
 See this
 https://www.cruisersforum.com/forums/f134/new-plugin-nmeaconvertor-145073.html#post3241791[CF #341 Post] and ones preceding.
 
-=== 11. Convert Temperature C to Fahrenheit
+== 11. Convert Temperature C to Fahrenheit
 
 Using convert C to F for temp ( $XXMTA, 9/5*$AIMTW5 32, F) with send
 after all updates variables checked.
@@ -712,7 +712,7 @@ $XXMTA, 9/5*$AIMTW1 32, F
 is showing the “Air Temp” in F in Dashboard on O. “I can never thank the
 volunteers enough for all these wonderful tools.”
 
-=== 12. Fix bad Heading Checksum
+== 12. Fix bad Heading Checksum
 
 http://www.cruisersforum.com/forums/f134/heading-info-not-being-accepted-used-225665.html#post3004204[Cruiser Forum Post]
 
@@ -761,7 +761,7 @@ From the Nmea Standard:
 > The checksum is the 8-bit exclusive OR (no start or stop bits) of all characters in the sentence, including "," and "^" delimiters, between but not including the "$" or "!" and the "*" delimiters[emphasis added]. The hexadecimal value of the most significant and least significant 4 bits of the result is converted to two ASCII characters (0-9, A-F (upper case)) for transmission. The most significant character is transmitted first.
 ----
 
-=== 13. Change Validity Character - NMEA Converter with the SailAway Game/Simulator
+== 13. Change Validity Character - NMEA Converter with the SailAway Game/Simulator
 
 The game SailAway sends realtime NMEA streams that can be used with
 plotter software, routing software, etc. The game developers have
@@ -786,7 +786,7 @@ Thanks to Jurien72 and Rasbats
 https://www.cruisersforum.com/forums/f134/sog-cog-problem-231924.html#post3101987[CForum
 SOG/COG Problem]
 
-=== 14. Contribute your Formulas & Conversions
+== 14. Contribute your Formulas & Conversions
 
 If you have an useful format formula please feel free to add it here.
 
@@ -795,11 +795,11 @@ Polar data and send a special NMEA sentence of the comparative result to
 the Dashboard using a special dedicated performance instrument, for
 example.
 
-=== Calculations Supported
+== Calculations Supported
 
 For calculations the following functions are supported:
 
-==== Normal functions
+=== Normal functions
 
 abs : the absolute value, it removes the sign
 ceil : the smallest integer greater than or equal to x
@@ -820,7 +820,7 @@ sqrt : the root square
 pi : 3.14159265
 deg : 3.14159265/180
 
-==== Trigonometric functions
+=== Trigonometric functions
 
 acos : the secant (inverse of cosine)
 acsh : the inverse of the hyperbolic cosine
