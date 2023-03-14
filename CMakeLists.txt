@@ -42,7 +42,7 @@ set(PACKAGE "nmeaconverter_pi")
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "3")
-set(VERSION_PATCH "0")
+set(VERSION_PATCH "1")
 set(VERSION_TWEAK "0")
 set(VERSION_DATE "13/03/2023")
 set(OCPN_MIN_VERSION "ov57")
