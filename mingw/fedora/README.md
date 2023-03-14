@@ -5,13 +5,13 @@ Tools to build a windows 32-bit executable using the mingw toolchain.
 
 How?
 ====
-    $ sudo  dnf copr enable leamas/opencpn-mingw
+    $ sudo  dnf copr enable /opencpn-mingw
     $ sudo dnf builddep opencpn-deps.spec
     $ cd ../..
     $ rm -rf build; mkdir build
     $ cd build;
     $ cmake -DCMAKE_TOOLCHAIN_FILE=../mingw/fedora/toolchain.cmake ..
-    $ make 
+    $ make
     $ make package
 
 Notes:
