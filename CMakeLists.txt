@@ -8,7 +8,7 @@
 ## ----- sequence to be successful                                                      ----- ##
 ##
 #-----------------------------------------------------------------------------
-# CI-CMake: v1.0.230.0 05/03/2023  # DD/MM/YYYY format  CI-CMake Author: Jon Gough
+# CI-CMake: v1.0.238.0 09/06/2023  # DD/MM/YYYY format  CI-CMake Author: Jon Gough
 # ---------------------------------------------------------------------------
 ## buildCI:yes useODAPI:no validateJSON:no
 
@@ -42,10 +42,10 @@ set(PACKAGE "nmeaconverter_pi")
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "3")
-set(VERSION_PATCH "1")
+set(VERSION_PATCH "2")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "13/03/2023")
-set(OCPN_MIN_VERSION "ov57")
+set(VERSION_DATE "11/06/2023")
+set(OCPN_MIN_VERSION "ov58")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 set(TP_COMMENT "  * Release for O571 using CI")
@@ -143,7 +143,7 @@ include("PluginConfigure")
 add_definitions(-DUSE_S57)
 
 set(SRCS
-    src/icons.h
+        src/icons.h
         src/icons.cpp
         src/NmeaConverter_pi.h
         src/NmeaConverter_pi.cpp
@@ -182,6 +182,22 @@ set(OCPNHDRS
 # set(EXTSRC ${EXTSRC} extsrc/clipper.cpp extsrc/pugixml.cpp)
 # 
 # set(EXTINCLUDE ${EXTINCLUDE} extinclude/clipper.hpp extinclude/pugiconfig.hpp extinclude/pugixml.hpp)
+
+set(LIBSSRC libs/wxJSON/src/jsonreader.cpp libs/wxJSON/src/jsonval.cpp libs/wxJSON/src/jsonwriter.cpp)
+
+set(LIBHDRS
+    libs/GL/gl.h
+    libs/GL/gl_private.h
+    libs/GL/glext.h
+    libs/GL/glu.h
+    libs/wxJSON/include/json_defs.h
+    libs/wxJSON/include/jsonreader.h
+    libs/wxJSON/include/jsonval.h
+    libs/wxJSON/include/jsonwriter.h)
+
+add_definitions(-DPLUGIN_USE_SVG)
+
+set(EXTINCLUDE_DIR ${EXTINCLUDE_DIR} extinclude libs/ocpn-api/)
 
 #
 # ----- If using JSON validation in plugin section below is needed ----- ##
