@@ -54,8 +54,7 @@ typedef struct {
           
       extern "C" int mysnprintf( char *buffer, int count, const char *format, ... );
       extern "C" int NextPow2(int size);
-      extern "C" void DouglasPeucker(double *PointList, int fp, int lp, double epsilon, std::vector<int> *keep);
-      extern "C" void DouglasPeuckerM(double *PointList, int fp, int lp, double epsilon, std::vector<int> *keep);
+      extern "C" void DouglasPeucker(double *PointList, int fp, int lp, double epsilon, wxArrayInt *keep);
       
 #else /* __cplusplus */
       extern int G_PtInPolygon(MyPoint *, int, float, float) ;
@@ -70,6 +69,15 @@ typedef struct {
      extern  long  __stdcall MyUnhandledExceptionFilter( struct _EXCEPTION_POINTERS *ExceptionInfo );
 #endif
 #endif
+     
+
+     //      Replacement for round(x)???
+#ifdef __cplusplus
+     extern "C"  double     round_msvc (double flt);
+#else
+     extern double round_msvc (double flt);
+#endif /* __cplusplus */
+     
      
 inline int roundint (double x)
 {

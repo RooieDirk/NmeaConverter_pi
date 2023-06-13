@@ -1,8 +1,5 @@
-cscope.files
-tags
-index.sh
-build
-cscope.out
-CMakeFiles
-po/*.rule
-*.kdev4
+build*
+po/POTFILES.in.test
+temp
+tmp
+master.zip
