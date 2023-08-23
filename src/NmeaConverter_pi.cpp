@@ -456,7 +456,11 @@ void nmeaSendObj::ComputeOutputSentence()
             if ( temp_s.find( _(".") ) == (size_t)wxNOT_FOUND )
                 temp_s.Append(_(".")); // add a decimal char is none there
             NoOfDecimals = std::max( NoOfDecimals,  temp_s.Length() - temp_s.find( _(".") ) -1 );
-            if ( (temp_s.Left(1) == _("0")) & (temp_s.find( _(".")) > 1) )
+
+            if ( (temp_s.find( _(".")) == 3) && (temp_s.Left(1) != "0") )
+                NoOfDigits = 3;
+
+            else if ( (temp_s.Left(1) == _("0")) & (temp_s.find( _(".")) > 1) )
                 NoOfDigits = std::max( NoOfDigits,  temp_s.find( _(".") ) -1 );
         }    
         
