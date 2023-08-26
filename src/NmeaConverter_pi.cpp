@@ -430,9 +430,11 @@ void nmeaSendObj::ComputeOutputSentence()
     
     //split formatstring in fields, so we can calculate each field apart
     wxArrayString formattokenarray;
-    wxStringTokenizer tkzformat(sendFormat, wxT(","));
-        while ( tkzformat.HasMoreTokens() )
-            formattokenarray.Add( tkzformat.GetNextToken() );
+    wxStringTokenizer tkzformat(sendFormat, wxT(","), wxTOKEN_RET_EMPTY_ALL);
+    while ( tkzformat.HasMoreTokens() ) {
+        wxString tkk = tkzformat.GetNextToken();
+        formattokenarray.Add(tkk);
+    }
     for (int j=1 ; j < (int)formattokenarray.GetCount(); j++)
     {
         // find max number of decimals so we can set the output later to the right amount of needed decimals.
@@ -440,7 +442,7 @@ void nmeaSendObj::ComputeOutputSentence()
         size_t NoOfDigits = 0;
         size_t IinString = 0;
         wxString s=formattokenarray[j];
-        
+
         while (IinString < s.Length()){
             // Go to start of begin number
             while ( ( _("0123456789.").find( s[IinString] ) == (size_t)wxNOT_FOUND ) &
@@ -452,7 +454,6 @@ void nmeaSendObj::ComputeOutputSentence()
                 temp_s.Append(s[IinString]);
                 IinString++;
             }  // temp_s contains now one number (as string)
-            
             if ( temp_s.find( _(".") ) == (size_t)wxNOT_FOUND )
                 temp_s.Append(_(".")); // add a decimal char is none there
             NoOfDecimals = std::max( NoOfDecimals,  temp_s.Length() - temp_s.find( _(".") ) -1 );
@@ -469,6 +470,10 @@ void nmeaSendObj::ComputeOutputSentence()
         if (UseDegrees) calc.SetTrigonometricMode(wxECA_DEGREE);
         if (calc.SetFormula( formattokenarray[j] ))
         {
+            double ff = calc.Compute();
+            if(fabs(ff) >= 100.)
+                NoOfDigits = 3;
+
             result = wxString::Format(wxT("%.*f"), NoOfDecimals, calc.Compute() );
             if (NoOfDigits){
                 wxString t(_("0000000000") );
@@ -494,6 +499,7 @@ void nmeaSendObj::ComputeOutputSentence()
         plugin-> p_nmeaSendObjectDlg->SetOutputStrTxt(sendFormat);
     else
         plugin->SendNMEASentence(sendFormat);
+    //printf("%s\n", sendFormat.ToStdString().c_str());
 }
 
 int  nmeaSendObj::ShowModal (wxWindow* parent)
