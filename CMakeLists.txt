@@ -1,21 +1,32 @@
-# ---------------------------------------------------------------------------
-# Frontend2 Author:      jongough aka. Jon Gough Copyright: License:     wxWidgets License
-# ---------------------------------------------------------------------------
-
-## ----- When changing this file do NOT change the order in which sections occur        ----- ##
-## ----- Changes should only be made between the section blocks that identify where     ----- ##
-## ----- these changes should be. The whole configuration process relies on this        ----- ##
-## ----- sequence to be successful                                                      ----- ##
-##
+##---------------------------------------------------------------------------
+## Author:      Dirk Smits
+##***************************************************************************
+## *   Copyright (C) 2010 by Sean d'Epagnier                              *
+## *   License:     GPLv3+
+## *   This program is free software; you can redistribute it and/or modify  *
+## *   it under the terms of the GNU General Public License as published by  *
+## *   the Free Software Foundation; either version 2 of the License, or     *
+## *   (at your option) any later version.                                   *
+## *                                                                         *
+## *   This program is distributed in the hope that it will be useful,       *
+## *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+## *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+## *   GNU General Public License for more details.                          *
+## *                                                                         *
+## *   You should have received a copy of the GNU General Public License     *
+## *   along with this program; if not, write to the                         *
+## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,                                       *
+## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                       *
 #-----------------------------------------------------------------------------
-# CI-CMake: v1.0.253.0 07/08/2023  # DD/MM/YYYY format  CI-CMake Author: Jon Gough
+# Frontend2 Author: Jon Gough 
+# Testplugn(TP) v1.0.254.0 09/09/2023 DD/MM/YYYY format
+# buildCI:yes useODAPI:no validateJSON:no
 # ---------------------------------------------------------------------------
-## buildCI:yes useODAPI:no validateJSON:no
-
-
+## -- When changing this file do NOT change the order of the sections.    -- ##
+## -- Make changes only between the section blocks identified             -- ##
+## -- The whole configuration process relies on this sequence for success.-- ##
 ##
-## ----- Modify section below to include all the details for your plugin ----- ##
-##
+## -- Modify section below to include all the details for your plugin.    -- ##
 
 set(CMLOC "CMakeLists: ")
 
@@ -41,45 +52,41 @@ set(PACKAGE_CONTACT "RooieDirk")
 set(PACKAGE "nmeaconverter_pi")
 
 set(VERSION_MAJOR "1")
-set(VERSION_MINOR "3")
-set(VERSION_PATCH "5")
+set(VERSION_MINOR "4")
+set(VERSION_PATCH "0")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "23/08/2023")
+set(VERSION_DATE "07/09/2023")
 set(OCPN_MIN_VERSION "ov58")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
-set(TP_COMMENT "  * Release for O571 using CI")
+set(TP_COMMENT "  * Release for O571 or o58 using CI")
 
 set(PARENT "opencpn")
 
-# The next line allows for setting up your own local webserver with git on it for testing purposes, the default is github.com
+#Use to set up a local webserver with git installed.
+#Default is github.com. Now set in pluginconfigure.cmake
 #set(GIT_REPOSITORY_SERVER "github.com")
 
-# Specifies cloudsmith repository sufficies
-set(PROD "prod")    # Standard Repos
-set(BETA "beta")    # Standard Repos
-set(ALPHA "alpha")  # Standard Repos
+## Specifies Cloudsmith upload repository suffix for each catalog
+set(PROD "prod")   #Standard Repos
+set(BETA "beta")   #Standard Repos
+set(ALPHA "alpha") #Standard Repos
 
-# set this if your cloudsmith repository name does not match your git repository name
-#set(CLOUDSMITH_BASE_REPOSITORY "testplugin_pi")
-set(CLOUDSMITH_BASE_REPOSITORY "nmeaconverter")
+#Set if Cloudsmith Base Repository name does not match your Git Repository name.
+#set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
+#
+set(CLOUDSMITH_BASE_REPOSITORY "nmeaconverter")   #without the pi
+
 # Set the following to use OpenCPN cloudsmith repositories instead of own repositories
 set(CLOUDSMITH_USER "opencpn")
-#set(CLOUDSMITH_USER "jon-gough")
 #set(CLOUDSMITH_USER "dirk-smits")
 
-# set this if your cloudsmith repository name does not match your git repository name set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/nmeaconvert.html")
 set(XML_SUMMARY "Plugin to change and cherrypich from other NMEA sentences")
 set(XML_DESCRIPTION "NmeaConverter is a plugin where you can manipulate or add new nmea sentences. It is rather tricky and easy to make mistakes that will 'hang' OpenCPN, but if used right very powerfull")
 
-##
 ## ----- Modify section above to include all the details for your plugin ----- ##
-##
-
-##
 ## ----- Modify section below if there are special requirements for the plugin ----- ##
-##
 
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
@@ -89,7 +96,7 @@ set(CMAKE_CXX_STANDARD 11)
 # requires libs/glu directory
 set(USE_LOCAL_GLU TRUE)
 # Prefer libGL.so to libOpenGL.so, see CMP0072
-set(OpenGL_GL_PREFERENCE "LEGACY")
+set(OpenGL_GL_PREFERENCE "LEGACY")   #not operational
 
 option(USE_GL "Enable OpenGL support" ON)
 message(STATUS "${CMLOC}USE_GL: ${USE_GL}")
@@ -108,39 +115,27 @@ project(${PACKAGE})
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+#========================================================
 include("PluginSetup")
-
-##
-## ----- The above is used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
-##
-
-##
+#========================================================
+## ----- Above used to setup standard variables required by CMAKE process - Do not remove ----- ##
 ## ----- Modify section below if there are special requirements for the plugin ----- ##
-##
 
 set(CMAKE_VERBOSE_MAKEFILE "Activate verbose mode for make files" ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
 
-##
 ## ----- Modify section above if there are special requirements for the plugin ----- ##
-##
-
-##
 ## ----- do not change next section - needed to configure build process ----- ##
-##
-
+#===========================================================
 include("PluginConfigure")
-
-##
+#===========================================================
 ## ----- do not change section above - needed to configure build process ----- ##
-##
-
-#
-# ----- Change below to match project requirements for source, headers, etc. ----- ##
-#
+## ----- Change below to match project requirements for source, headers, etc. ----- ##
 
 add_definitions(-DUSE_S57)
+
+## ---- Section Below - Add your project SET(SRCS and SET(HDRS  etc..
 
 set(SRCS
         src/icons.h
@@ -154,36 +149,11 @@ set(SRCS
 set(HDRS
     )
 
-set(OCPNSRC
-    )
-set(OCPNHDRS
-    ocpninclude/AISTargetAlertDialog.h
-    ocpninclude/AISTargetQueryDialog.h
-    ocpninclude/bbox.h
-    ocpninclude/cutil.h
-    ocpninclude/geodesic.h
-    ocpninclude/georef.h
-    ocpninclude/Hyperlink.h
-    ocpninclude/ocpn_plugin.h
-    ocpninclude/SelectItem.h
-    ocpninclude/TexFont.h
-    ocpninclude/timers.h
-    ocpninclude/vector2D.h
-    ocpninclude/wx28compat.h
-    ocpninclude/GL/gl.h
-    ocpninclude/GL/glext.h
-    ocpninclude/GL/gl_private.h
-    ocpninclude/GL/glu.h
-    ocpninclude/wx/json_defs.h
-    ocpninclude/wx/jsonreader.h
-    ocpninclude/wx/jsonval.h
-    ocpninclude/wx/jsonwriter.h)
 
-# set(EXTSRC ${EXTSRC} extsrc/clipper.cpp extsrc/pugixml.cpp)
-# 
-# set(EXTINCLUDE ${EXTINCLUDE} extinclude/clipper.hpp extinclude/pugiconfig.hpp extinclude/pugixml.hpp)
-
-set(LIBSSRC libs/wxJSON/src/jsonreader.cpp libs/wxJSON/src/jsonval.cpp libs/wxJSON/src/jsonwriter.cpp)
+set(LIBSSRC 
+    libs/wxJSON/src/jsonreader.cpp
+    libs/wxJSON/src/jsonval.cpp
+    libs/wxJSON/src/jsonwriter.cpp)
 
 set(LIBHDRS
     libs/GL/gl.h
@@ -197,126 +167,80 @@ set(LIBHDRS
 
 add_definitions(-DPLUGIN_USE_SVG)
 
-set(EXTINCLUDE_DIR ${EXTINCLUDE_DIR} extinclude libs/ocpn-api/)
+## ----- Section above - Add your project SET(SRCS and SET(HDRS  etc..
+## ----- If using JSON validation in plugin section below is needed ----- ##
 
-#
-# ----- If using JSON validation in plugin section below is needed ----- ##
-#
+# Do not need Json Schema Validation
 
-# if(APPLE)
-#     option(OD_JSON_SCHEMA_VALIDATOR "Use JSON Schema validator" OFF)
-# else(APPLE)
-#     option(OD_JSON_SCHEMA_VALIDATOR "Use JSON Schema validator" ON)
-# endif(APPLE)
-# 
-# if(OD_JSON_SCHEMA_VALIDATOR)
-#     message(STATUS "${CMLOC}Using JSON Schema validation - warning this changes the 'flavour' of the executable and it may not be compatible with OpenCPN")
-#     add_definitions(-DOD_JSON_SCHEMA_VALIDATOR)
-#     message(STATUS "${CMLOC}Adding JSON Schema validation")
-# 
-#     set(EXTSRC ${EXTSRC} extsrc/json-schema-validator/json-schema-draft7.json.cpp extsrc/json-schema-validator/json-uri.cpp extsrc/json-schema-validator/json-validator.cpp)
-#     set(EXTINCLUDE ${EXTINCLUDE} extinclude/nlohmann/json.hpp extinclude/json-schema-validator/json-schema.hpp)
-#     include_directories(BEFORE ${PROJECT_SOURCE_DIR}/extinclude/json-schema-validator)
-# else(OD_JSON_SCHEMA_VALIDATOR)
-#     message(STATUS "${CMLOC}Not using JSON Schema validation - warning invalid JSON 'may' cause unexpected crashes")
-# endif(OD_JSON_SCHEMA_VALIDATOR)
+## ----- If using JSON validation in plugin section above is needed ----- ##
 
-#
-# ----- If using JSON validation in plugin section above is needed ----- ##
-#
 
-option(OD_USE_SVG "Use SVG graphics" ON)
-# include_directories(BEFORE ${PROJECT_SOURCE_DIR}/extsrc/mygdal)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/glu/include)
-# include_directories(BEFORE ${PROJECT_SOURCE_DIR}/extinclude)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl/include)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/GL)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/lz4)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/bitmaps)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/${EXTINCLUDE_DIR})
+##================================================================================
+## Change as required to collect all the set( headers and SRCS
+## This add_library  can be used in conditionals below.
+##================================================================================
+
+SET(SRC ${SRCS} ${HDRS} ${LIBSSRC} )
+
+##=============================================================
+## Modify/configure 'Include' Directories below for the Plugin
+##=============================================================
+
+
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ODAPI)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/GL)
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/glu/include)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ocpn-api)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wxJSON/include)
 
-#
-# ----- Change below to match project requirements for android build ----- ##
-#
-
-if(QT_ANDROID)
-    include_directories( ${PROJECT_SOURCE_DIR}/extinclude/GLES2)
-endif(QT_ANDROID)
-
-##
-## ----- Change above to match project requirements for android build ----- ##
-##
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/jsoncpp)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/nmea0183/src)
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/pluginDC/include)
 
 
-target_sources(${PACKAGE_NAME} PUBLIC ${SRCS} ${HDRS} ${OCPNSRC} ${EXTSRC} ${LIBSSRC})
+## Change target_sources to match your project needs.
+##=================================================
+target_sources(${PACKAGE_NAME} PUBLIC ${SRC} )
+##=================================================
 
 if(NOT OCPN_FLATPAK_CONFIG)
     # Build environment not available when flatpak is being configured so following statements will not work
     message(STATUS "${CMLOC}Adding target link libraries to ${PACKAGE_NAME}")
 
     add_subdirectory(libs/tinyxml)
+    add_subdirectory(libs/pluginDC)
 
     target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
+    target_link_libraries(${PACKAGE_NAME} ocpn::pluginDC)
 endif(NOT OCPN_FLATPAK_CONFIG)
 
 add_definitions(-DTIXML_USE_STL)
 
-#
-# ----- If using JSON validation in plugin section below is needed ----- ##
-#
-
-if(UNIX AND NOT APPLE AND NOT QT_ANDRIOD)
-    if(PI_JSON_SCHEMA_VALIDATOR)
-        # Change OS/ABI to be UNIX - System V to make it run with OCPN
-        set(lib_name lib${PACKAGE_NAME}.so)
-        message(STATUS "${CMLOC}lib-name: ${lib_name}")
-        find_file(elfedit elfedit)
-        if(NOT (${elfedit} STREQUAL "elfedit-NOTFOUND"))
-            message(STATUS "${CMLOC}Will ensure OS/ABI is set to 0 to match OCPN")
-            add_custom_command(
-                TARGET ${PACKAGE_NAME}
-                POST_BUILD
-                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                DEPENDS ${PACKAGE_NAME}
-                COMMENT " Running post build action on ${lib_name}."
-                COMMAND sh -c 'elfedit --input-osabi=Linux --output-osabi=none ${lib_name} || (echo 0) ')
-        else(NOT (${elfedit} STREQUAL "elfedit-NOTFOUND"))
-            message(STATUS "${CMLOC}Cannot correct OS/ABI to match OCPN if it is generated incorrectly. Package binutils needed")
-        endif(NOT (${elfedit} STREQUAL "elfedit-NOTFOUND"))
-    endif(PI_JSON_SCHEMA_VALIDATOR)
-endif(UNIX AND NOT APPLE AND NOT QT_ANDRIOD)
-
-#
-# ----- If using JSON validation in plugin section above is needed ----- ##
-#
-
 ##
-## ----- Change above to match project requirements ----- ##
+## ----- If using JSON validation section below is needed ----- ##
 ##
 
+# Do not need Json Schema Validation
+
 ##
-## ----- do not change next section - needed to configure build process ----- ##
+## ----- Do not change next section - needed to configure build process ----- ##
 ##
+##------- Change below to match project requirements --------------
 
 # Needed for android builds
 if(QT_ANDROID)
     include_directories(BEFORE ${qt_android_include})
 endif(QT_ANDROID)
 
-# Needed for all builds
+## Needed for all builds Do not change - needed to build app --- ##
+#========================================================
 include("PluginInstall")
 include("PluginLocalization")
 include("PluginPackage")
+#========================================================
+## ----- Do not change section above - needed to configure build process ----- ##
 
-##
-## ----- do not change section above - needed to configure build process ----- ##
-##
 message(STATUS "${CMLOC}include directories: ")
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach(dir ${dirs})
