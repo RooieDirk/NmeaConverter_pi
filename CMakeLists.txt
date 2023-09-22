@@ -53,13 +53,14 @@ set(PACKAGE "nmeaconverter_pi")
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "4")
-set(VERSION_PATCH "0")
+set(VERSION_PATCH "1")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "07/09/2023")
+set(VERSION_DATE  "22/09/2023")#DD/MM/YYYY format
 set(OCPN_MIN_VERSION "ov58")
+
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
-set(TP_COMMENT "  * Release for O571 or o58 using CI")
+set(TP_COMMENT "  * Release using CI")
 
 set(PARENT "opencpn")
 
@@ -72,7 +73,7 @@ set(PROD "prod")   #Standard Repos
 set(BETA "beta")   #Standard Repos
 set(ALPHA "alpha") #Standard Repos
 
-#Set if Cloudsmith Base Repository name does not match your Git Repository name.
+# Set if  Cloudsmith Base Repository name does not match your Git Repository name.
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
 #
 set(CLOUDSMITH_BASE_REPOSITORY "nmeaconverter")   #without the pi
@@ -85,8 +86,8 @@ set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/nmeaconvert.html")
 set(XML_SUMMARY "Plugin to change and cherrypich from other NMEA sentences")
 set(XML_DESCRIPTION "NmeaConverter is a plugin where you can manipulate or add new nmea sentences. It is rather tricky and easy to make mistakes that will 'hang' OpenCPN, but if used right very powerfull")
 
-## ----- Modify section above to include all the details for your plugin ----- ##
-## ----- Modify section below if there are special requirements for the plugin ----- ##
+## ----- Modify section above to include all the details for your plugin ------- ##
+## ----- Modify section below if there are special requirements for the plugin --##
 
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
@@ -107,31 +108,33 @@ endif("${CMAKE_BUILD_TYPE}" STREQUAL "")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 message(STATUS "${CMLOC}Build type: ${CMAKE_BUILD_TYPE}")
 
-##
-## ----- The statements below are used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
-##
+## ----- Statements below used to setup standard variables required by the CMAKE process -- Do not remove - ##
 
 project(${PACKAGE})
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-#========================================================
+##========================================================
+
 include("PluginSetup")
-#========================================================
-## ----- Above used to setup standard variables required by CMAKE process - Do not remove ----- ##
-## ----- Modify section below if there are special requirements for the plugin ----- ##
+
+##========================================================
+## ----- Above sets up standard variables required by CMAKE - Do not remove -----##
+## ----- Modify section below if there are special requirements for the plugin --##
 
 set(CMAKE_VERBOSE_MAKEFILE "Activate verbose mode for make files" ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
 
-## ----- Modify section above if there are special requirements for the plugin ----- ##
-## ----- do not change next section - needed to configure build process ----- ##
-#===========================================================
+## ----- Modify section above if there are special requirements for the plugin --##
+## ----- Do not change next section - needed to configure build process ---------##
+##===========================================================
+
 include("PluginConfigure")
-#===========================================================
-## ----- do not change section above - needed to configure build process ----- ##
-## ----- Change below to match project requirements for source, headers, etc. ----- ##
+
+##===========================================================
+## ----- Do not change section above - needed to configure build process --------##
+## ----- Change below to match project requirements for source, headers, etc. ---##
 
 add_definitions(-DUSE_S57)
 
@@ -150,96 +153,92 @@ set(HDRS
     )
 
 
-set(LIBSSRC 
-    libs/wxJSON/src/jsonreader.cpp
-    libs/wxJSON/src/jsonval.cpp
-    libs/wxJSON/src/jsonwriter.cpp)
-
-set(LIBHDRS
-    libs/GL/gl.h
-    libs/GL/gl_private.h
-    libs/GL/glext.h
-    libs/GL/glu.h
-    libs/wxJSON/include/json_defs.h
-    libs/wxJSON/include/jsonreader.h
-    libs/wxJSON/include/jsonval.h
-    libs/wxJSON/include/jsonwriter.h)
-
 add_definitions(-DPLUGIN_USE_SVG)
 
-## ----- Section above - Add your project SET(SRCS and SET(HDRS  etc..
-## ----- If using JSON validation in plugin section below is needed ----- ##
+## ----- Section above - Add your project SET(SRCS and SET(HDRS  etc.-------##
+## ----- If using JSON validation in plugin section below is needed --------##
 
 # Do not need Json Schema Validation
 
-## ----- If using JSON validation in plugin section above is needed ----- ##
+## ----- If using JSON validation in plugin section above is needed --------##
 
 
-##================================================================================
+##=============================================================
 ## Change as required to collect all the set( headers and SRCS
 ## This add_library  can be used in conditionals below.
-##================================================================================
+##=============================================================
 
-SET(SRC ${SRCS} ${HDRS} ${LIBSSRC} )
+SET(SRC ${SRCS} ${HDRS} )
 
 ##=============================================================
 ## Modify/configure 'Include' Directories below for the Plugin
 ##=============================================================
 
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
 
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ODAPI)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/GL)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/glu/include)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ocpn-api)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wxJSON/include)
-
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/jsoncpp)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/nmea0183/src)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/pluginDC/include)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ODAPI)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/GL)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/glu/include)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ocpn-api)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wxJSON/include)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/pluginDC/include)
 
 
 ## Change target_sources to match your project needs.
-##=================================================
+##==============================================================
+
 target_sources(${PACKAGE_NAME} PUBLIC ${SRC} )
-##=================================================
+
+##==============================================================
 
 if(NOT OCPN_FLATPAK_CONFIG)
-    # Build environment not available when flatpak is being configured so following statements will not work
+    # Build environment not available when flatpak is being configured 
+	# so following statements will not work
     message(STATUS "${CMLOC}Adding target link libraries to ${PACKAGE_NAME}")
 
-    add_subdirectory(libs/tinyxml)
-    add_subdirectory(libs/pluginDC)
+    add_subdirectory(opencpn-libs/WindowsHeaders)
+    target_link_libraries(${PACKAGE_NAME} windows::headers)
 
+    add_subdirectory(opencpn-libs/api-16)
+    target_link_libraries(${PACKAGE_NAME} ocpn::api)
+
+    add_subdirectory(opencpn-libs/tinyxml)
     target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
-    target_link_libraries(${PACKAGE_NAME} ocpn::pluginDC)
+
+    add_subdirectory(opencpn-libs/wxJSON)
+    target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
+
+    add_subdirectory(opencpn-libs/plugingl)
+    target_link_libraries(${PACKAGE_NAME} ocpn::plugingl)
+  
 endif(NOT OCPN_FLATPAK_CONFIG)
 
 add_definitions(-DTIXML_USE_STL)
 
 ##
-## ----- If using JSON validation section below is needed ----- ##
+## ----- If using JSON validation section below is needed ---------------##
 ##
 
 # Do not need Json Schema Validation
 
-##
-## ----- Do not change next section - needed to configure build process ----- ##
-##
-##------- Change below to match project requirements --------------
+
+##------- Change below to match project requirements --------------------##
 
 # Needed for android builds
 if(QT_ANDROID)
     include_directories(BEFORE ${qt_android_include})
 endif(QT_ANDROID)
 
-## Needed for all builds Do not change - needed to build app --- ##
-#========================================================
+## Needed for all builds Do not change - needed to build app -------------##
+##===============================================================
+
 include("PluginInstall")
 include("PluginLocalization")
 include("PluginPackage")
-#========================================================
-## ----- Do not change section above - needed to configure build process ----- ##
+
+##================================================================
+## ----- Do not change section above - needed to configure build process --##
 
 message(STATUS "${CMLOC}include directories: ")
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
