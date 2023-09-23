@@ -53,7 +53,7 @@ set(PACKAGE "nmeaconverter_pi")
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "4")
-set(VERSION_PATCH "1")
+set(VERSION_PATCH "2")
 set(VERSION_TWEAK "0")
 set(VERSION_DATE  "22/09/2023")#DD/MM/YYYY format
 set(OCPN_MIN_VERSION "ov58")
@@ -176,15 +176,6 @@ SET(SRC ${SRCS} ${HDRS} )
 
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
 
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ODAPI)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/GL)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/glu/include)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ocpn-api)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wxJSON/include)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/pluginDC/include)
-
-
 ## Change target_sources to match your project needs.
 ##==============================================================
 
@@ -205,6 +196,9 @@ if(NOT OCPN_FLATPAK_CONFIG)
 
     add_subdirectory(opencpn-libs/tinyxml)
     target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
+
+    add_subdirectory(opencpn-libs/gl)
+    target_link_libraries(${PACKAGE_NAME} ocpn::gl)
 
     add_subdirectory(opencpn-libs/wxJSON)
     target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)

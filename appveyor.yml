@@ -7,10 +7,6 @@ platform:
 #  - x64
 #  - Win32
 
-branch:
-  only:
-  -
-
 configuration: Release
 test: OFF
 
