@@ -53,7 +53,7 @@ set(PACKAGE "nmeaconverter_pi")
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "4")
-set(VERSION_PATCH "2")
+set(VERSION_PATCH "3")
 set(VERSION_TWEAK "0")
 set(VERSION_DATE  "22/09/2023")#DD/MM/YYYY format
 set(OCPN_MIN_VERSION "ov58")
@@ -191,14 +191,11 @@ if(NOT OCPN_FLATPAK_CONFIG)
     add_subdirectory(opencpn-libs/WindowsHeaders)
     target_link_libraries(${PACKAGE_NAME} windows::headers)
 
-    add_subdirectory(opencpn-libs/api-16)
+    add_subdirectory(opencpn-libs\api-16)  
     target_link_libraries(${PACKAGE_NAME} ocpn::api)
 
     add_subdirectory(opencpn-libs/tinyxml)
     target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
-
-    add_subdirectory(opencpn-libs/gl)
-    target_link_libraries(${PACKAGE_NAME} ocpn::gl)
 
     add_subdirectory(opencpn-libs/wxJSON)
     target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
