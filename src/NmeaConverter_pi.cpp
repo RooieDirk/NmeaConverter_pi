@@ -69,12 +69,14 @@ bool NmeaConverter_pi::DeInit(void)
 
 int NmeaConverter_pi::GetAPIVersionMajor()
 {
-      return MY_API_VERSION_MAJOR;
+     return OCPN_API_VERSION_MAJOR;
+//      return MY_API_VERSION_MAJOR;
 }
 
 int NmeaConverter_pi::GetAPIVersionMinor()
 {
-      return MY_API_VERSION_MINOR;
+     return OCPN_API_VERSION_MAJOR;
+//      return MY_API_VERSION_MINOR;
 }
 
 int NmeaConverter_pi::GetPlugInVersionMajor()
