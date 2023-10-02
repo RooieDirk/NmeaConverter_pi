@@ -36,8 +36,8 @@
 
 #include "version.h"
 
-#define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    8
+//#define     MY_API_VERSION_MAJOR    1
+//#define     MY_API_VERSION_MINOR    8
 
 #include "ocpn_plugin.h"
 
@@ -65,7 +65,7 @@ typedef enum SentenceSendMode
     TIMED
 }_SentenceSendMode;
 
-class NmeaConverter_pi : public opencpn_plugin_18
+class NmeaConverter_pi : public opencpn_plugin_17
 {
     WX_DECLARE_HASH_MAP(int, nmeaSendObj*, wxIntegerHash, wxIntegerEqual, MapOfnmeaSendObj);  
     
@@ -80,6 +80,8 @@ public:
     int GetAPIVersionMinor();
     int GetPlugInVersionMajor();
     int GetPlugInVersionMinor();
+    int GetPlugInVersionPatch();
+    int GetPlugInVersionPost();
     wxBitmap *GetPlugInBitmap();
     wxString GetCommonName();
     wxString GetShortDescription();

@@ -42,7 +42,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
     delete p;
 }
 
-NmeaConverter_pi::NmeaConverter_pi(void *ppimgr):opencpn_plugin_18(ppimgr)
+NmeaConverter_pi::NmeaConverter_pi(void *ppimgr):opencpn_plugin_17(ppimgr)
 {
           // Create the PlugIn icons
       initialize_images();
@@ -85,6 +85,16 @@ int NmeaConverter_pi::GetPlugInVersionMajor()
 int NmeaConverter_pi::GetPlugInVersionMinor()
 {
       return PLUGIN_VERSION_MINOR;
+}
+
+int NmeaConverter_pi::GetPlugInVersionPatch()
+{
+      return PLUGIN_VERSION_PATCH;
+}
+
+int NmeaConverter_pi::GetPlugInVersionPost()
+{
+      return PLUGIN_VERSION_TWEAK;
 }
 
 wxString NmeaConverter_pi::GetCommonName()
