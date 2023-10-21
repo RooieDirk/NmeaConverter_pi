@@ -1,5 +1,5 @@
 /******************************************************************************
- * updated: 12-04-2015  
+ * updated: 12-04-2015
  * Project:  OpenCPN
  * Purpose:  nmeaTranslate Plugin
  * Author:   Dirk Smits
@@ -36,15 +36,15 @@
 
 #include "version.h"
 
-#define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    8
+//#define     MY_API_VERSION_MAJOR    1
+//#define     MY_API_VERSION_MINOR    8
 
 #include "ocpn_plugin.h"
 
 #include "ec_defs.h"
 #include "ec_engine.h"
 
-#include <wx/arrstr.h> 
+#include <wx/arrstr.h>
 #include <wx/dynarray.h>
 #include <wx/listctrl.h>
 #include <wx/fileconf.h>
@@ -65,10 +65,10 @@ typedef enum SentenceSendMode
     TIMED
 }_SentenceSendMode;
 
-class NmeaConverter_pi : public opencpn_plugin_18
+class NmeaConverter_pi : public opencpn_plugin_117
 {
-    WX_DECLARE_HASH_MAP(int, nmeaSendObj*, wxIntegerHash, wxIntegerEqual, MapOfnmeaSendObj);  
-    
+    WX_DECLARE_HASH_MAP(int, nmeaSendObj*, wxIntegerHash, wxIntegerEqual, MapOfnmeaSendObj);
+
 public:
     MapOfnmeaSendObj::iterator objit;
     NmeaConverter_pi(void *ppimgr);
@@ -80,6 +80,8 @@ public:
     int GetAPIVersionMinor();
     int GetPlugInVersionMajor();
     int GetPlugInVersionMinor();
+    int GetPlugInVersionPatch();
+    int GetPlugInVersionPost();
     wxBitmap *GetPlugInBitmap();
     wxString GetCommonName();
     wxString GetShortDescription();
@@ -104,12 +106,12 @@ public:
 private:
     wxArrayString nmeaSentenceArray;
     wxArrayString nmeaIDArray;
-    wxFileConfig* m_pconfig;     
+    wxFileConfig* m_pconfig;
 };
 
 class nmeaSendObj : wxObject
 {
-    // declare a hash map with string keys and string values for received sentences 
+    // declare a hash map with string keys and string values for received sentences
     WX_DECLARE_STRING_HASH_MAP( wxString, ReceivedSentences );
 
 public:
@@ -141,7 +143,7 @@ private:
     //wxTimer* m_timer;
     bool DlgActive;
     bool ValidFormatStr;
-    
+
     SentenceSendMode SendMode;
     int RepeatTime;
     localTimer* p_timer;
@@ -149,7 +151,7 @@ private:
 
 class localTimer :public wxTimer
 {
-public:   
+public:
     localTimer();
     void Create( nmeaSendObj* theObject );
     ~localTimer();
@@ -191,7 +193,7 @@ private:
  */
 
 class PreferenceDlg: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( PreferenceDlg )
     DECLARE_EVENT_TABLE()
 
@@ -257,7 +259,7 @@ private:
  */
 
 class nmeaSendObjectDlg: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( nmeaSendObjectDlg )
     DECLARE_EVENT_TABLE()
 
@@ -281,7 +283,7 @@ public:
     wxBitmap GetBitmapResource( const wxString& name );
     wxIcon GetIconResource( const wxString& name );
     static bool ShowToolTips();
-    
+
     nmeaSendObj* SendObjOfThisDlg;
     wxSpinCtrl* itemSpinCtrl;
     wxRadioButton* itemRadioButtonVal;
