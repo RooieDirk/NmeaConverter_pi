@@ -1,0 +1,80 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: opencpn\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-24 09:18-0500\n"
+"PO-Revision-Date: 2023-10-19 09:18\n"
+"Last-Translator: \n"
+"Language-Team: Spanish (Modern)\n"
+"Language: es_EM\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Project-ID: 49843\n"
+"X-Crowdin-Language: es-EM\n"
+"X-Crowdin-File: /plugins/NmeaConverter_pi/po/nmeaconverter_pi.pot\n"
+"X-Crowdin-File-ID: 170\n"
+
+#: src/NmeaConverter_pi.cpp:89 src/NmeaConverter_pi.cpp:94
+msgid "NmeaConverter_pi"
+msgstr "crwdns7245:0crwdne7245:0"
+
+#: src/NmeaConverter_pi.cpp:99
+msgid "NmeaConverter_pi."
+msgstr "crwdns7246:0crwdne7246:0"
+
+#: src/NmeaConverter_pi.cpp:133
+msgid "*"
+msgstr "crwdns7247:0crwdne7247:0"
+
+#: src/NmeaConverter_pi.cpp:167
+#, c-format
+msgid "%02X"
+msgstr "crwdns7248:0%02Xcrwdne7248:0"
+
+#: src/NmeaConverter_pi.cpp:499
+msgid "Block incomming messages with wrong checksum"
+msgstr "crwdns7249:0crwdne7249:0"
+
+#: src/NmeaConverter_pi.cpp:523
+msgid "New"
+msgstr "crwdns7250:0crwdne7250:0"
+
+#: src/NmeaConverter_pi.cpp:526
+msgid "Edit"
+msgstr "crwdns7251:0crwdne7251:0"
+
+#: src/NmeaConverter_pi.cpp:530
+msgid "Delete"
+msgstr "crwdns7252:0crwdne7252:0"
+
+#: src/NmeaConverter_pi.cpp:534 src/NmeaConverter_pi.cpp:710
+msgid "OK"
+msgstr "crwdns7253:0crwdne7253:0"
+
+#: src/NmeaConverter_pi.cpp:696
+msgid "Send after update all variables"
+msgstr "crwdns7254:0crwdne7254:0"
+
+#: src/NmeaConverter_pi.cpp:699
+msgid "Send every                    seconds"
+msgstr "crwdns7255:0crwdne7255:0"
+
+#: src/NmeaConverter_pi.cpp:705
+msgid "Output sentence comes here;-)"
+msgstr "crwdns7256:0crwdne7256:0"
+
+#: src/NmeaConverter_pi.cpp:712
+msgid "Cancel"
+msgstr "crwdns7257:0crwdne7257:0"
+
+#: src/NmeaConverter_pi.h:182
+msgid "PreferenceDlg"
+msgstr "crwdns7258:0crwdne7258:0"
+
+#: src/NmeaConverter_pi.h:247
+msgid "nmeaSendObjectDlg"
+msgstr "crwdns7259:0crwdne7259:0"
+
