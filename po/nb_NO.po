@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-24 09:18-0500\n"
-"PO-Revision-Date: 2023-10-04 18:33\n"
+"POT-Creation-Date: 2023-10-20 20:22+0200\n"
+"PO-Revision-Date: 2023-11-09 21:22\n"
 "Last-Translator: \n"
 "Language-Team: Norwegian Bokmal\n"
 "Language: nb_NO\n"
@@ -17,64 +17,102 @@ msgstr ""
 "X-Crowdin-File: /plugins/NmeaConverter_pi/po/nmeaconverter_pi.pot\n"
 "X-Crowdin-File-ID: 170\n"
 
-#: src/NmeaConverter_pi.cpp:89 src/NmeaConverter_pi.cpp:94
+#: src/NmeaConverter_pi.cpp:104
 msgid "NmeaConverter_pi"
 msgstr "NmeaConverter_pi"
 
-#: src/NmeaConverter_pi.cpp:99
-msgid "NmeaConverter_pi."
-msgstr "NmeaConverter_pi."
+#: src/NmeaConverter_pi.cpp:109
+msgid "Plugin for manipulating nmea sentences"
+msgstr ""
 
-#: src/NmeaConverter_pi.cpp:133
+#: src/NmeaConverter_pi.cpp:163
 msgid "*"
 msgstr "*"
 
-#: src/NmeaConverter_pi.cpp:167
+#: src/NmeaConverter_pi.cpp:211
 #, c-format
 msgid "%02X"
 msgstr "%02X"
 
-#: src/NmeaConverter_pi.cpp:499
+#: src/NmeaConverter_pi.cpp:235
+msgid "Dlg already deleted:_)"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:460 src/NmeaConverter_pi.cpp:464
+msgid "0123456789."
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:469 src/NmeaConverter_pi.cpp:470
+#: src/NmeaConverter_pi.cpp:471 src/NmeaConverter_pi.cpp:473
+#: src/NmeaConverter_pi.cpp:476 src/NmeaConverter_pi.cpp:477
+msgid "."
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:476
+msgid "0"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:491
+msgid "0000000000"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:506
+msgid ","
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:651
 msgid "Block incomming messages with wrong checksum"
 msgstr "Blokker innkommende meldinger med feil sjekksum"
 
-#: src/NmeaConverter_pi.cpp:523
+#: src/NmeaConverter_pi.cpp:675
 msgid "New"
 msgstr "Ny"
 
-#: src/NmeaConverter_pi.cpp:526
+#: src/NmeaConverter_pi.cpp:678
 msgid "Edit"
 msgstr "Endre"
 
-#: src/NmeaConverter_pi.cpp:530
+#: src/NmeaConverter_pi.cpp:682
 msgid "Delete"
 msgstr "Slett"
 
-#: src/NmeaConverter_pi.cpp:534 src/NmeaConverter_pi.cpp:710
+#: src/NmeaConverter_pi.cpp:686
 msgid "OK"
 msgstr "OK"
 
-#: src/NmeaConverter_pi.cpp:696
+#: src/NmeaConverter_pi.cpp:851
 msgid "Send after update all variables"
 msgstr "Send etter oppdatering av alle variabler"
 
-#: src/NmeaConverter_pi.cpp:699
-msgid "Send every                    seconds"
-msgstr "Send hvert                    sekund"
+#: src/NmeaConverter_pi.cpp:858
+msgid "Send every  "
+msgstr ""
 
-#: src/NmeaConverter_pi.cpp:705
+#: src/NmeaConverter_pi.cpp:866
+msgid "seconds."
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:869
+msgid "Calculate using degrees"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:872
 msgid "Output sentence comes here;-)"
 msgstr "Utgående setninger kommer her;-)"
 
-#: src/NmeaConverter_pi.cpp:712
-msgid "Cancel"
-msgstr "Avbryt"
+#: src/NmeaConverter_pi.cpp:883
+msgid "&OK"
+msgstr ""
 
-#: src/NmeaConverter_pi.h:182
+#: src/NmeaConverter_pi.cpp:886
+msgid "&Cancel"
+msgstr ""
+
+#: src/NmeaConverter_pi.h:184
 msgid "PreferenceDlg"
 msgstr "InnstillingsDialog"
 
-#: src/NmeaConverter_pi.h:247
+#: src/NmeaConverter_pi.h:250
 msgid "nmeaSendObjectDlg"
 msgstr "nmeaSendObjektDialog"
 
