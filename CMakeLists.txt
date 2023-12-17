@@ -54,7 +54,7 @@ set(PACKAGE "nmeaconverter_pi")
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "4")
 set(VERSION_PATCH "13")
-set(VERSION_TWEAK "0")
+set(VERSION_TWEAK "3")
 set(VERSION_DATE  "12/10/2023")#DD/MM/YYYY format
 set(OCPN_MIN_VERSION "ov58")
 
@@ -188,8 +188,10 @@ if(NOT OCPN_FLATPAK_CONFIG)
 	# so following statements will not work
     message(STATUS "${CMLOC}Adding target link libraries to ${PACKAGE_NAME}")
 
-#    add_subdirectory(opencpn-libs/WindowsHeaders)
-#    target_link_libraries(${PACKAGE_NAME} windows::headers)
+    if(WIN32)
+        add_subdirectory(opencpn-libs/WindowsHeaders)
+        target_link_libraries(${PACKAGE_NAME} windows::headers)
+    endif()
 
     add_subdirectory(opencpn-libs/api-17)
     target_link_libraries(${PACKAGE_NAME} ocpn::api)
