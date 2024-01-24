@@ -1,117 +1,118 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the nmeaconverter_pi package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: nmeaconverter_pi 1.4.11.0\n"
+"Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-20 20:22+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2023-11-09 21:22\n"
+"Last-Translator: \n"
+"Language-Team: Italian\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Project-ID: 49843\n"
+"X-Crowdin-Language: it\n"
+"X-Crowdin-File: /plugins/NmeaConverter_pi/po/nmeaconverter_pi.pot\n"
+"X-Crowdin-File-ID: 170\n"
 
 #: src/NmeaConverter_pi.cpp:104
 msgid "NmeaConverter_pi"
-msgstr ""
+msgstr "NmeaConverter_pi"
 
 #: src/NmeaConverter_pi.cpp:109
 msgid "Plugin for manipulating nmea sentences"
-msgstr ""
+msgstr "Plugin per manipolare le frasi nmea"
 
 #: src/NmeaConverter_pi.cpp:163
 msgid "*"
-msgstr ""
+msgstr "*"
 
 #: src/NmeaConverter_pi.cpp:211
 #, c-format
 msgid "%02X"
-msgstr ""
+msgstr "%02X"
 
 #: src/NmeaConverter_pi.cpp:235
 msgid "Dlg already deleted:_)"
-msgstr ""
+msgstr "Dlg già eliminato:_)"
 
 #: src/NmeaConverter_pi.cpp:460 src/NmeaConverter_pi.cpp:464
 msgid "0123456789."
-msgstr ""
+msgstr "0123456789,."
 
 #: src/NmeaConverter_pi.cpp:469 src/NmeaConverter_pi.cpp:470
 #: src/NmeaConverter_pi.cpp:471 src/NmeaConverter_pi.cpp:473
 #: src/NmeaConverter_pi.cpp:476 src/NmeaConverter_pi.cpp:477
 msgid "."
-msgstr ""
+msgstr "."
 
 #: src/NmeaConverter_pi.cpp:476
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/NmeaConverter_pi.cpp:491
 msgid "0000000000"
-msgstr ""
+msgstr "0000000000"
 
 #: src/NmeaConverter_pi.cpp:506
 msgid ","
-msgstr ""
+msgstr ","
 
 #: src/NmeaConverter_pi.cpp:651
 msgid "Block incomming messages with wrong checksum"
-msgstr ""
+msgstr "Bloccare i messaggi in entrata con checksum errato"
 
 #: src/NmeaConverter_pi.cpp:675
 msgid "New"
-msgstr ""
+msgstr "Nuovo"
 
 #: src/NmeaConverter_pi.cpp:678
 msgid "Edit"
-msgstr ""
+msgstr "Modifica"
 
 #: src/NmeaConverter_pi.cpp:682
 msgid "Delete"
-msgstr ""
+msgstr "Elimina"
 
 #: src/NmeaConverter_pi.cpp:686
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: src/NmeaConverter_pi.cpp:851
 msgid "Send after update all variables"
-msgstr ""
+msgstr "Inviare dopo l'aggiornamento di tutte le variabili"
 
 #: src/NmeaConverter_pi.cpp:858
 msgid "Send every  "
-msgstr ""
+msgstr "Invia ogni  "
 
 #: src/NmeaConverter_pi.cpp:866
 msgid "seconds."
-msgstr ""
+msgstr "secondi."
 
 #: src/NmeaConverter_pi.cpp:869
 msgid "Calculate using degrees"
-msgstr ""
+msgstr "Calcola usando i gradi"
 
 #: src/NmeaConverter_pi.cpp:872
 msgid "Output sentence comes here;-)"
-msgstr ""
+msgstr "Frase in output qui;-)"
 
 #: src/NmeaConverter_pi.cpp:883
 msgid "&OK"
-msgstr ""
+msgstr "&Ok"
 
 #: src/NmeaConverter_pi.cpp:886
 msgid "&Cancel"
-msgstr ""
+msgstr "&Annulla"
 
 #: src/NmeaConverter_pi.h:184
 msgid "PreferenceDlg"
-msgstr ""
+msgstr "PreferenceDlg"
 
 #: src/NmeaConverter_pi.h:250
 msgid "nmeaSendObjectDlg"
-msgstr ""
+msgstr "nmeaSendObjectDlg"
+
