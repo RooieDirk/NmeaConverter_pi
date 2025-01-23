@@ -1,0 +1,118 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: opencpn\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-20 20:22+0200\n"
+"PO-Revision-Date: 2023-11-09 21:22\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Project-ID: 49843\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /plugins/NmeaConverter_pi/po/nmeaconverter_pi.pot\n"
+"X-Crowdin-File-ID: 170\n"
+
+#: src/NmeaConverter_pi.cpp:104
+msgid "NmeaConverter_pi"
+msgstr "Конвертер NMEA предложений"
+
+#: src/NmeaConverter_pi.cpp:109
+msgid "Plugin for manipulating nmea sentences"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:163
+msgid "*"
+msgstr "*"
+
+#: src/NmeaConverter_pi.cpp:211
+#, c-format
+msgid "%02X"
+msgstr "%02X"
+
+#: src/NmeaConverter_pi.cpp:235
+msgid "Dlg already deleted:_)"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:460 src/NmeaConverter_pi.cpp:464
+msgid "0123456789."
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:469 src/NmeaConverter_pi.cpp:470
+#: src/NmeaConverter_pi.cpp:471 src/NmeaConverter_pi.cpp:473
+#: src/NmeaConverter_pi.cpp:476 src/NmeaConverter_pi.cpp:477
+msgid "."
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:476
+msgid "0"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:491
+msgid "0000000000"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:506
+msgid ","
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:651
+msgid "Block incomming messages with wrong checksum"
+msgstr "Блокировать входящие сообщения с неверной контрольной суммой"
+
+#: src/NmeaConverter_pi.cpp:675
+msgid "New"
+msgstr "Создать"
+
+#: src/NmeaConverter_pi.cpp:678
+msgid "Edit"
+msgstr "Изменить"
+
+#: src/NmeaConverter_pi.cpp:682
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/NmeaConverter_pi.cpp:686
+msgid "OK"
+msgstr "ОК"
+
+#: src/NmeaConverter_pi.cpp:851
+msgid "Send after update all variables"
+msgstr "Отправлять после обновления всех переменных"
+
+#: src/NmeaConverter_pi.cpp:858
+msgid "Send every  "
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:866
+msgid "seconds."
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:869
+msgid "Calculate using degrees"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:872
+msgid "Output sentence comes here;-)"
+msgstr "Исходящие предложения"
+
+#: src/NmeaConverter_pi.cpp:883
+msgid "&OK"
+msgstr ""
+
+#: src/NmeaConverter_pi.cpp:886
+msgid "&Cancel"
+msgstr ""
+
+#: src/NmeaConverter_pi.h:184
+msgid "PreferenceDlg"
+msgstr "Настройки"
+
+#: src/NmeaConverter_pi.h:250
+msgid "nmeaSendObjectDlg"
+msgstr "NMEA Конвертер"
+
